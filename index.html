@@ -51,18 +51,13 @@
 		    // Collect rows: all groups whose id starts with "Line"
 		    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
 		
-		    // hardcode headers as won't change between files
-		   const header = ["ITEM NUM.", "PART NUMBER", "DESCRIPTION", "QTY"]
-		
 		    // Sort by numeric suffix so Line1, Line2, ... are in order
 		    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
 		
 		    // Extract each cell text in order of appearance inside the group
 		    const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
 
-			// prepend the hardcode column headers
-			const tableData = [header, ...rows];
-		    renderTable(tableData);
+		    renderTable(rows);
 		  }
 		
 		  function renderTable(rows) {
@@ -95,6 +90,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
