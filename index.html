@@ -39,8 +39,8 @@
 		    // Collect rows: all groups whose id starts with "Line"
 		    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
 		
-		    // If your header row is NOT inside a Line* group, we can add a separate selector here.
-		    // e.g., const header = [...svgDoc.querySelectorAll('text.header')].map(...)
+		    // hardcode headers as won't change between files
+		   const header = ["ITEM NUM.", "PART NUMBER", "DESCRIPTION", "QTY"]
 		
 		    // Sort by numeric suffix so Line1, Line2, ... are in order
 		    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
@@ -81,6 +81,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
