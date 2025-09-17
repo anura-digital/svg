@@ -85,7 +85,8 @@
 		  function escapeHtml(s) {
 		    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 		  }
-
+		</script>
+		<script>
 		   // ---------------- CART LOGIC ----------------
 			let cart = JSON.parse(localStorage.getItem('cart')) || [];
 			
@@ -133,9 +134,37 @@
 			  saveCart();
 			  renderCart();
 			}
+
+			function readCartFromTable() {
+			  const table = document.getElementById("cartTable");
+			  if (!table) return [];
+			  const rows = [];
+			  table.querySelectorAll("tbody tr").forEach(tr => {
+			    const tds = tr.querySelectorAll("td");
+			    if (tds.length >= 3) {
+			      const qtyInput = tds[2].querySelector("input");
+			      const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
+			      rows.push({
+			        part: tds[0].textContent.trim(),
+			        description: tds[1].textContent.trim(),
+			        qty: parseInt(qtyText.trim(), 10) || 0
+			      });
+			    }
+			  });
+			  return rows;
+			}
+			
+			// Listen for parent requests
+			window.addEventListener("message", e => {
+			  if (e.data && e.data.type === "REQUEST_CART_ROWS") {
+			    const rows = readCartFromTable();
+			    e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
+			  }
+			});
 	  </script>
 	</body>
 </html>
+
 
 
 
