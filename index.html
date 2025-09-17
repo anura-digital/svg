@@ -1,23 +1,107 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>2-000-800-A viewer</title>
-</head>
-<body>
-  <div class="stage" role="region" aria-label="Drawing 2-000-800-A">
-    <!-- Display the main SVG -->
-    <object data="2-000-800-A.svg" type="image/svg+xml" aria-label="2-000-800-A"></object>
+	<head>
+	  <meta charset="utf-8" />
+	  <meta name="viewport" content="width=device-width,initial-scale=1" />
+	  <title>Parts</title>
+	</head>
+	<body>
+	  <div id="stage" role="region">
+		<!-- Display the first SVG -->
+		<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml" aria-label="2-000-800-A"></object>
 
-    <!-- Menu with direct links to the other files -->
-    <nav class="menu" aria-label="Related drawings">
-      <span class="label">Open:</span>
-      <a href="2-000-801-A.svg">801-A</a>
-      <a href="2-000-893-A.svg">893-A</a>
-      <a href="2-001-799-A.svg">799-A</a>
-    </nav>
-  </div>
-</body>
+		 <div id="tableOut" aria-live="polite"></div>
+
+		<!-- Menu with direct links to the other files -->
+		<nav class="menu" aria-label="Related drawings">
+		  <span class="label">Open:</span>
+		  <a href="2-000-801-A.svg">801-A</a>
+		  <a href="2-000-893-A.svg">893-A</a>
+		  <a href="2-001-799-A.svg">799-A</a>
+		</nav>
+	  </div>
+	  
+	   <script>
+  const obj = document.getElementById('svgObj');
+  const out = document.getElementById('tableOut');
+
+  // Load clicks into the <object> instead of navigating away
+  document.querySelector('.menu').addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    obj.data = a.getAttribute('href');
+  });
+
+  // When the SVG finishes loading inside <object>
+  obj.addEventListener('load', () => {
+    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
+    if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
+      handleSvgDoc(svgDoc);
+    } else {
+      // Fallback: fetch & parse (fixes cases where contentDocument is null)
+      fallbackFetch(obj.data);
+    }
+  });
+
+  function fallbackFetch(url) {
+    fetch(url)
+      .then(r => r.text())
+      .then(txt => {
+        const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+        handleSvgDoc(doc);
+      })
+      .catch(err => {
+        console.error('Failed to fetch SVG:', err);
+        out.textContent = 'Could not read SVG (check server/CORS/MIME).';
+      });
+  }
+
+  function handleSvgDoc(svgDoc) {
+    // Collect rows: all groups whose id starts with "Line"
+    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
+
+    // If your header row is NOT inside a Line* group, we can add a separate selector here.
+    // e.g., const header = [...svgDoc.querySelectorAll('text.header')].map(...)
+
+    // Sort by numeric suffix so Line1, Line2, ... are in order
+    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
+
+    // Extract each cell text in order of appearance inside the group
+    const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
+
+    renderTable(rows);
+  }
+
+  function renderTable(rows) {
+    if (!rows.length) {
+      out.textContent = 'No Line* groups with <text> found.';
+      return;
+    }
+
+    // If the first row is a header row, use <th>. Otherwise everything is <td>.
+    const looksLikeHeader = rows[0].every(t => isNaN(Number(t)) || /[A-Za-z]/.test(t));
+    let html = '<table>';
+
+    if (looksLikeHeader) {
+      html += '<thead><tr>' + rows[0].map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead>';
+      rows.shift();
+    }
+
+    html += '<tbody>';
+    for (const r of rows) {
+      html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '</tr>';
+    }
+    html += '</tbody></table>';
+
+    out.innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  </script>
+	</body>
 </html>
+
 
