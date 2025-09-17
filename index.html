@@ -7,6 +7,7 @@
 	</head>
 	<body>
 	  <div id="stage" role="region">
+		
 		<!-- Display the first SVG -->
 		<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml"></object>
 
@@ -32,7 +33,7 @@
 		  const obj = document.getElementById('svgObj');
 		  const out = document.getElementById('tableOut');
 
-		   // Load clicks into the <object> instead of navigating away
+		   // When clicking the navigation links, load the data into the 'svgObj' rather than opening a new tab
 		  document.querySelector('.menu').addEventListener('click', (e) => {
 		    const a = e.target.closest('a');
 		    if (!a) return;
@@ -40,7 +41,7 @@
 		    obj.data = a.getAttribute('href');
 		  });
 		   
-		  // When the SVG finishes loading inside <object>
+		  // When SVG loads into 'objSvg' check that the the content is valid svg file
 		  obj.addEventListener('load', () => {
 		    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
 		    if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
@@ -48,11 +49,12 @@
 		    }
 		  });
 
+			// extract each rows information useing the Line#
 		  function handleSvgDoc(svgDoc) {
 		    // Collect rows: all groups whose id starts with "Line"
 		    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
 		
-		    // Sort by numeric suffix so Line1, Line2, ... are in order
+		    // Put Line1, Line2, ... in order
 		    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
 		
 		    // Extract each cell text in order of appearance inside the group
@@ -68,14 +70,14 @@
 		    }
 		
 		    // If the first row is a header row, use <th>. Otherwise everything is <td>.
-		    const looksLikeHeader = rows[0].every(t => isNaN(Number(t)) || /[A-Za-z]/.test(t));
+		    //const looksLikeHeader = rows[0].every(t => isNaN(Number(t)) || /[A-Za-z]/.test(t));
 		    let html = '<table>';
 		
-		    if (looksLikeHeader) {
-		      html += '<thead><tr>' + rows[0].map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead>';
-		      rows.shift();
-		    }
-		
+		    //if (looksLikeHeader) {
+		    //  html += '<thead><tr>' + rows[0].map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead>';
+		    //  rows.shift();
+		    //}
+			html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th></tr></thead>'
 		    html += '<tbody>';
 		    for (const r of rows) {
 		      html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '</tr>';
@@ -92,6 +94,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
