@@ -21,6 +21,7 @@
 
 		  <!-- output for the 'ordering' table' -->
 		 <div id="tableOut" aria-live="polite"></div>
+		  <button onclick="table_to_cart()" />
 
 		  <div id="cart">
 			
@@ -29,7 +30,6 @@
 
 		<!-- script to get the table of products -->
 	   <script>
-		   
 		  const obj = document.getElementById('svgObj');
 		  const out = document.getElementById('tableOut');
 
@@ -86,8 +86,57 @@
 		  function escapeHtml(s) {
 		    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 		  }
+
+		   // ---------------- CART LOGIC ----------------
+			let cart = JSON.parse(localStorage.getItem('cart')) || [];
+			
+			function saveCart() {
+			  localStorage.setItem('cart', JSON.stringify(cart));
+			}
+			
+			function renderCart() {
+			  if (!cart.length) {
+			    document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
+			    return;
+			  }
+			  let html = '<h3>Shopping Cart</h3><table><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
+			  for (const item of cart) {
+			    html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
+			  }
+			  html += '</table>';
+			  document.getElementById('cart').innerHTML = html;
+			}
+			
+			// Called when user clicks "Add to Cart"
+			function table_to_cart() {
+			  // Look for table rows in #tableOut
+			  const rows = document.querySelectorAll('#tableOut table tbody tr');
+			  rows.forEach(tr => {
+			    const cells = tr.querySelectorAll('td');
+			    const qtyInput = tr.querySelector('input');
+			    if (!qtyInput) return;
+			    const qty = parseInt(qtyInput.value, 10);
+			    if (qty > 0) {
+			      const item = {
+			        part: cells[1].textContent,   // 2nd column = Part Number
+			        desc: cells[2].textContent,   // 3rd column = Description
+			        qty
+			      };
+			      // If already in cart, update qty
+			      const existing = cart.find(i => i.part === item.part);
+			      if (existing) {
+			        existing.qty += qty;
+			      } else {
+			        cart.push(item);
+			      }
+			    }
+			  });
+			  saveCart();
+			  renderCart();
+			}
 	  </script>
 	</body>
 </html>
+
 
 
