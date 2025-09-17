@@ -30,7 +30,15 @@
 	   <script>
 		  const obj = document.getElementById('svgObj');
 		  const out = document.getElementById('tableOut');
-		
+
+		   // Load clicks into the <object> instead of navigating away
+		  document.querySelector('.menu').addEventListener('click', (e) => {
+		    const a = e.target.closest('a');
+		    if (!a) return;
+		    e.preventDefault();
+		    obj.data = a.getAttribute('href');
+		  });
+		   
 		  // When the SVG finishes loading inside <object>
 		  obj.addEventListener('load', () => {
 		    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
@@ -87,6 +95,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
