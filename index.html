@@ -27,38 +27,14 @@
 		  const obj = document.getElementById('svgObj');
 		  const out = document.getElementById('tableOut');
 		
-		  // Load clicks into the <object> instead of navigating away
-		  document.querySelector('.menu').addEventListener('click', (e) => {
-		    const a = e.target.closest('a');
-		    if (!a) return;
-		    e.preventDefault();
-		    obj.data = a.getAttribute('href');
-		  });
-		
 		  // When the SVG finishes loading inside <object>
 		  obj.addEventListener('load', () => {
 		    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
 		    if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
 		      handleSvgDoc(svgDoc);
-		    } else {
-		      // Fallback: fetch & parse (fixes cases where contentDocument is null)
-		      fallbackFetch(obj.data);
 		    }
 		  });
-		
-		  function fallbackFetch(url) {
-		    fetch(url)
-		      .then(r => r.text())
-		      .then(txt => {
-		        const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
-		        handleSvgDoc(doc);
-		      })
-		      .catch(err => {
-		        console.error('Failed to fetch SVG:', err);
-		        out.textContent = 'Could not read SVG (check server/CORS/MIME).';
-		      });
-		  }
-		
+
 		  function handleSvgDoc(svgDoc) {
 		    // Collect rows: all groups whose id starts with "Line"
 		    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
@@ -105,6 +81,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
