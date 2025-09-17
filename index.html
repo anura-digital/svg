@@ -3,12 +3,12 @@
 	<head>
 	  <meta charset="utf-8" />
 	  <meta name="viewport" content="width=device-width,initial-scale=1" />
-	  <title>Parts</title>
+	  <title>TESTING SVG</title>
 	</head>
 	<body>
 	  <div id="stage" role="region">
 		
-		<!-- Display the first SVG -->
+		<!-- Display an initial SVG -->
 		<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml"></object>
 
 		<!-- Menu with direct links to the other files -->
@@ -62,7 +62,8 @@
 
 		    renderTable(rows);
 		  }
-		
+
+			// build HTML table using the rows of Line#
 		  function renderTable(rows) {
 		    if (!rows.length) {
 		      out.textContent = 'No Line* groups with <text> found.';
@@ -73,10 +74,6 @@
 		    //const looksLikeHeader = rows[0].every(t => isNaN(Number(t)) || /[A-Za-z]/.test(t));
 		    let html = '<table>';
 		
-		    //if (looksLikeHeader) {
-		    //  html += '<thead><tr>' + rows[0].map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead>';
-		    //  rows.shift();
-		    //}
 			html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th></tr></thead>'
 		    html += '<tbody>';
 		    for (const r of rows) {
@@ -94,6 +91,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
