@@ -77,7 +77,7 @@
 			html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th>th>ORDER QTY</th></tr></thead>'
 		    html += '<tbody>';
 		    for (const r of rows) {
-		      html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + <input type="number"></tr>';
+		      html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + <input type="number"> + </tr>';
 		    }
 		    html += '</tbody></table>';
 		
@@ -91,6 +91,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
