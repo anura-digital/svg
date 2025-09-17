@@ -135,6 +135,7 @@
 			  renderCart();
 			}
 
+			// extract the rows from the cart for odoo to be able to access the cart data
 			function readCartFromTable() {
 			  const table = document.getElementById("cartTable");
 			  if (!table) return [];
@@ -164,13 +165,3 @@
 	  </script>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
