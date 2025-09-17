@@ -24,8 +24,8 @@
 		  <button onclick="table_to_cart()">Add items to cart</button>
 
 		  <div id="cart">
-			
 		  </div>
+		  <button onclick="sendCartToParent()">Send cart to odoo</button>
 	  </div>
 
 		<!-- script to get the table of products -->
@@ -134,9 +134,17 @@
 			  saveCart();
 			  renderCart();
 			}
+
+		   // export the items from cart to odoo page
+		   function sendCartToParent() {
+			  const cart = JSON.parse(localStorage.getItem('cart') || "[]");
+			  window.parent.postMessage({cart}, "*");
+			}
+
 	  </script>
 	</body>
 </html>
+
 
 
 
