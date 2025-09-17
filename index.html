@@ -98,7 +98,7 @@
 			    document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
 			    return;
 			  }
-			  let html = '<h3>Shopping Cart</h3><table><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
+			  let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
 			  for (const item of cart) {
 			    html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
 			  }
@@ -136,6 +136,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
