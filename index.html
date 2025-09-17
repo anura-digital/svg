@@ -47,7 +47,9 @@
 		
 		    // Extract each cell text in order of appearance inside the group
 		    const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
-		
+
+			// prepend the hardcode column headers
+			const tableData = [header, ...rows];
 		    renderTable(rows);
 		  }
 		
@@ -81,6 +83,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
