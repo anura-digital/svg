@@ -14,14 +14,22 @@
 			}
 			
 			#flex-main-container {
-				display: flex;
-				direction: row;
-				justify-content: space-between;
+			  display: flex;
+			  flex-direction: row;         /* left/right layout: SVG on left, order/cart on right */
+			  justify-content: flex-start; /* align items side by side */
+			  gap: 20px;                   /* spacing between svg and order/cart column */
 			}
-
+			
 			#flex-order-container {
-				display:flex;
-				direction: column;
+			  display: flex;
+			  flex-direction: column;      /* stack tableOut/button and cart vertically */
+			  gap: 20px;                   /* spacing between table and cart */
+			  flex: 1;                     /* allow this to grow */
+			}
+			
+			#svgObj {
+			  flex: 0 0 auto;              /* don’t let svg shrink */
+			  max-width: 50%;              /* keep svg from being too big */
 			}
 		</style>
 	</head>
@@ -234,6 +242,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
