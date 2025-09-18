@@ -53,14 +53,9 @@
 					// Load the JSON file
 					const response = await fetch("sn_docs.json");
 					const data = await response.json();
-			
-					// If JSON is a single object
-					if (data.sn === enteredSn) {
-						resultDiv.innerHTML = "<strong>Files:</strong><br>" + data.files.join("<br>");
-					} 
 						
 					// If JSON is an array of objects (more scalable)
-					else if (Array.isArray(data)) {
+					if (Array.isArray(data)) {
 				  		const match = data.find(item => item.sn === enteredSn);
 				  	
 						if (match) {
@@ -69,9 +64,9 @@
 
 							// make the file names links to the actual SVG file
 							const links = match.files
-											.map(file => `<a href="${file}" target="_blank">${file}</a>`)
-											.join("<br>");
-							resultDiv.innerHTML = "<strong>RELATED SVG FILES:</strong>" + links;
+							    .map(file => `<a href="${file}" target="_blank">${file}</a>`)
+							    .join("<br>");
+							  resultDiv.innerHTML = "<strong>Files:</strong><br>" + links;
 					  	} else {
 							resultDiv.innerHTML = "No files found for SN: " + enteredSn;
 					  	}
@@ -225,6 +220,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
