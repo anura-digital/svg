@@ -7,6 +7,12 @@
 	</head>
 	<body>
 	  	<div id="stage">
+			<!-- Input for the S/N - will determine which files need to be displayed -->
+			<label for="sn-input">SN:</label>
+			<input type="text" id="sn-input" />
+
+
+			
 			<!-- Display an initial SVG -->
 			<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml"></object>
 
@@ -19,7 +25,7 @@
 			</nav>
 
 			<!-- output for the 'ordering' table' -->
-			<div id="tableOut" aria-live="polite"></div>
+			<div id="tableOut"></div>
 			<button onclick="table_to_cart()">Add items to cart</button>
 
 			<div id="cart">
@@ -165,4 +171,5 @@
 	  </script>
 	</body>
 </html>
+
 
