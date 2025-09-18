@@ -59,7 +59,7 @@
 			}
 		</script>
 		
-		<!-- script to get reproduce SVG table as a 'shopping form' to order parts -->
+		<!-- script to reproduce SVG table as a 'shopping form' to order parts -->
 	   	<script>
 			const obj = document.getElementById('svgObj');
 			const out = document.getElementById('tableOut');
@@ -126,6 +126,7 @@
 			
 			  // Loop through every <a> inside the SVG
 			  svgRoot.querySelectorAll('a[xlink\\:href], a[href]').forEach(a => {
+				  console.log("looping through all <a> tags in svg, the current tag is ${a}");
 			    const href = a.getAttribute('xlink:href') || a.getAttribute('href');
 			    if (!href) return;
 			
@@ -242,5 +243,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
