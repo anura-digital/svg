@@ -64,7 +64,14 @@
 				  		const match = data.find(item => item.sn === enteredSn);
 				  	
 						if (match) {
-							resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
+							// prev version to show text version of file names
+							//resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
+
+							// make the file names links to the actual SVG file
+							const links = match.files
+											.map(file => `<a href="${file}" target="_blank">${file}</a>`)
+											.join("<br>");
+							resultDiv.innerHTML = "<strong>RELATED SVG FILES:</strong>" + links;
 					  	} else {
 							resultDiv.innerHTML = "No files found for SN: " + enteredSn;
 					  	}
@@ -218,6 +225,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
