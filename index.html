@@ -3,15 +3,19 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link href="https://db.onlinewebfonts.com/c/e669dc3dfe6f38d646e8b58ea26c9672?family=Rogan+Light" rel="stylesheet" type="text/css"/>
 		<title>TESTING SVG</title>
 
 		<style>
+			body{
+				font-family: "Rogan Light";
+			}
+			
 			#main-flex-container {
 				display: flex;
 				direction: row;
 				justify-content: space-between;
 			}
-			
 		</style>
 	</head>
 	<body>
@@ -34,10 +38,14 @@
 					<div id="tableOut"></div>
 					<button id="btnAddToCart" onclick="table_to_cart()" style="display: none;">Add items to cart</button>
 				</div>
+
+				<div id="cart-container">
+					<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
+				</div>
 			</div>
 			
 
-			<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
+			
 	  	</div>
 
 
@@ -218,6 +226,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
