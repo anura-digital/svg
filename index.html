@@ -159,7 +159,7 @@
 
 			function highlightTableRow(filename, on) {
 			  // Find a row in #tableOut whose data-part matches filename. want to strip away the ".svg" part of the filename
-				partNum = filename.split(.)[1]
+				partNum = filename.split(/\./)[1]
 				console.log(partNum)
 			  const row = document.querySelector(`#tableOut tr[data-part="${filename}"]`);
 			  if (row) {
@@ -264,6 +264,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
