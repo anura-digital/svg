@@ -4,6 +4,15 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<title>TESTING SVG</title>
+
+		<style>
+			#main-flex-container {
+				display: flex;
+				direction: row;
+				justify-content: space-between;
+			}
+			
+		</style>
 	</head>
 	<body>
 	  	<div id="stage">
@@ -15,17 +24,22 @@
 			<div id="result" class="menu">
 				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
 			</div>
-			
-			<!-- Display an initial SVG -->
-			<object id= "svgObj" type="image/svg+xml">THIS IS WHERE THE SVG WILL APPEAR</object>
 
-			<!-- output for the 'ordering' table' -->
-			<div id="tableOut"></div>
-			<button onclick="table_to_cart()">Add items to cart</button>
+			<div id="main-flex-container">
+				<!-- Display an initial SVG -->
+				<object id= "svgObj" type="image/svg+xml">THIS IS WHERE THE SVG WILL APPEAR</object>
+	
+				<!-- output for the 'ordering' table' -->
+				<div id="tableOut"></div>
+				<button onclick="table_to_cart()">Add items to cart</button>
+			</div>
+			
 
 			<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
 	  	</div>
 
+
+		
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
 
 		<!-- script for checking JSON file and providing links to each part -->
@@ -106,7 +120,7 @@
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
 				}
 				html += '</tbody></table>';
 			
@@ -245,3 +259,4 @@
 	  </script>
 	</body>
 </html>
+
