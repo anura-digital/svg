@@ -7,9 +7,10 @@
 	</head>
 	<body>
 	  	<div id="stage">
-			<!-- Input for the S/N - will determine which files need to be displayed -->
+			<!-- Input SN. Search txt doc if SN is valid and what SVG files are associated with it  -->
 			<label for="sn-input">SN:</label>
 			<input type="text" id="sn-input" />
+			<button onclick="isValidSn()">Search</button>
 
 
 			
@@ -33,6 +34,12 @@
 	  	</div>
 
 		<!------------------------ SCRIPTS ------------------------>
+		<script>
+			function isValidSn() {
+				
+			}
+		</script>
+		
 		<!-- script to get the table of products -->
 	   	<script>
 			const obj = document.getElementById('svgObj');
@@ -171,5 +178,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
