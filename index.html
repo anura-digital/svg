@@ -6,6 +6,10 @@
 		<title>TESTING SVG</title>
 	</head>
 	<body>
+		<style>
+		  .highlight { background-color: #b8f7b8 !important; }
+		</style>
+		
 	  	<div id="stage">
 			<!-- Input SN. Search txt doc if SN is valid and what SVG files are associated with it  -->
 			<label for="sn-input">SN:</label>
@@ -96,75 +100,118 @@
 
 			// build HTML table using the rows of Line#
 			function renderTable(rows) {
-				if (!rows.length) {
-				out.textContent = 'No Line* groups with <text> found.';
-				return;
-				}
-			
-				let html = '<table>';
-			
-				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
-				html += '<tbody>';
+  if (!rows.length) { out.textContent = 'No Line* groups with <text> found.'; return; }
 
-				//////// TESTING ////////////
-				html += '<tr id="hotspot.17" onmouseover="ShowHotSpot(evt,&apos;17&apos;)" onmouseout="HideHotSpot(evt,&apos;17&apos;)"><td>0</td><td>TESTING</td>'
-				////////////////////////////
-				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
-				}
-				html += '</tbody></table>';
-			
-				out.innerHTML = html;
-			}
+  let html = '<table>';
+  html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
+  html += '<tbody>';
 
-			// convert svg tags to valid html tags
-			function escapeHtml(s) {
-				return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-			}
+  for (const r of rows) {
+    const partNumber = (r[1] || '').trim();                // e.g., "2-000-802-A"
+    const fileName   = partNumber ? `${partNumber}.svg` : ''; // e.g., "2-000-802-A.svg"
+    html += `<tr data-part="${escapeHtml(partNumber)}" data-file="${escapeHtml(fileName)}">`
+         +   r.map(c => `<td>${escapeHtml(c)}</td>`).join('')
+         +   `<td><input type="number" step="1" min="0"/></td>`
+         + `</tr>`;
+  }
+
+  html += '</tbody></table>';
+  out.innerHTML = html;
+
+  // After (re)render, rewire hover handlers (defined below)
+  wireHotspotsToTable();
+}
+
 		</script>
 
 
 		
 		<!-- script to make the 'order form' table have green highlighting like the SVG table -->
-		<script>
-			function collectFileHotspots(svgRoot) {
-			  const fileMap = {};
-			
-			  // Loop through every <a> inside the SVG
-			  svgRoot.querySelectorAll('a').forEach(a => {
-			    // Handle both xlink:href and href
-			    const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") 
-			              || a.getAttribute("href");
-			    if (!href) return;
-			
-			    // Extract just the filename
-			    const filename = href.split(/[/\\]/).pop();
-			
-			    // Find the <g> parent
-			    const g = a.closest('g[id^="hotspot."]');
-			    if (!g) return;
-			
-			    const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
-			
-			    if (!fileMap[filename]) {
-			      fileMap[filename] = [];
-			    }
-			    fileMap[filename].push(hotspotId);
+<script>
+let hotspotToFile = {};  // e.g. { "hotspot.4": "2-000-802-A.svg", ... }
+let svgDoc = null;
 
-			  });
-			
-			  return fileMap;
-			}
+function collectFileHotspots(svgRoot) {
+  const fileMap = {}; // filename -> [hotspot.*]
 
-			document.getElementById('svgObj').addEventListener('load', () => {
-			  const obj = document.getElementById('svgObj');
-			  const svgDoc = obj.contentDocument;
-			  const svgRoot = svgDoc.querySelector('svg');
-			
-			  const result = collectFileHotspots(svgRoot);
-			  console.log("Hotspot map:", result);
-			});
-			</script>
+  svgRoot.querySelectorAll('a').forEach(a => {
+    const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href")
+               || a.getAttribute("href");
+    if (!href) return;
+
+    const filename = href.split(/[/\\]/).pop(); // "2-000-802-A.svg"
+    const g = a.closest('g[id^="hotspot."]');
+    if (!g) return;
+
+    const hotspotId = g.getAttribute('id');     // "hotspot.4"
+    (fileMap[filename] ||= []).push(hotspotId);
+  });
+
+  return fileMap;
+}
+
+function invertToHotspotMap(fileMap) {
+  const map = {};
+  for (const [file, ids] of Object.entries(fileMap)) {
+    ids.forEach(id => map[id] = file);
+  }
+  return map;
+}
+
+function normalizePartFromFile(file) {
+  // "2-000-802-A.svg" -> "2-000-802-A"
+  return file?.endsWith('.svg') ? file.slice(0, -4) : file;
+}
+
+// Call this any time after both the table is rendered and the SVG is loaded
+function wireHotspotsToTable() {
+  if (!svgDoc || !Object.keys(hotspotToFile).length) return;
+
+  // Attach mouseenter/leave on each hotspot <g>
+  svgDoc.querySelectorAll('g[id^="hotspot."]').forEach(g => {
+    const file = hotspotToFile[g.id];
+    if (!file) return;
+
+    const part = normalizePartFromFile(file);
+
+    const onEnter = () => toggleRowHighlight(part, true);
+    const onLeave = () => toggleRowHighlight(part, false);
+
+    // Avoid double-binding if this runs more than once
+    g.removeEventListener('mouseenter', onEnter);
+    g.removeEventListener('mouseleave', onLeave);
+    g.addEventListener('mouseenter', onEnter);
+    g.addEventListener('mouseleave', onLeave);
+  });
+}
+
+function toggleRowHighlight(partOrFile, on) {
+  // Try match by data-part (plain part number) first, then by data-file
+  const part = normalizePartFromFile(partOrFile);
+
+  let row = document.querySelector(`#tableOut tr[data-part="${CSS.escape(part)}"]`);
+  if (!row) {
+    const file = part.endsWith('.svg') ? part : `${part}.svg`;
+    row = document.querySelector(`#tableOut tr[data-file="${CSS.escape(file)}"]`);
+  }
+  if (row) row.classList.toggle('highlight', !!on);
+}
+
+// When the external SVG loads into <object>, build the hotspot map
+document.getElementById('svgObj').addEventListener('load', () => {
+  const obj = document.getElementById('svgObj');
+  svgDoc = obj.contentDocument || obj.getSVGDocument?.();
+  if (!svgDoc) return;
+
+  const svgRoot = svgDoc.querySelector('svg');
+  if (!svgRoot) return;
+
+  const fileMap = collectFileHotspots(svgRoot);     // filename -> [hotspot.*]
+  hotspotToFile = invertToHotspotMap(fileMap);      // hotspot.* -> filename
+  wireHotspotsToTable();                             // attach hover now that mapping exists
+});
+</script>
+
 
 
 
@@ -249,6 +296,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
