@@ -148,11 +148,14 @@
 			  return fileMap;
 			}
 
-			// Example usage:
-			document.addEventListener('DOMContentLoaded', () => {
-			  const svg = document.querySelector('svg'); // or obj.contentDocument.querySelector('svg')
-			  const result = collectFileHotspots(svg);
-			  console.log(result);
+			// Listen for when the object finishes loading the SVG
+			document.getElementById('svgObj').addEventListener('load', () => {
+			  const obj = document.getElementById('svgObj');
+			  const svgDoc = obj.contentDocument;     // the SVG's DOM
+			  const svgRoot = svgDoc.querySelector('svg');
+			
+			  const result = collectFileHotspots(svgRoot);
+			  console.log("Hotspot map:", result);
 			});
 		</script>
 
@@ -239,4 +242,5 @@
 	  </script>
 	</body>
 </html>
+
 
