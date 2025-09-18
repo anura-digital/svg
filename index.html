@@ -25,6 +25,12 @@
 
 			<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
 	  	</div>
+		
+		<style>
+			.highlight {
+			  background-color: lightgreen !important;
+			}
+		</style>
 
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
 
@@ -148,6 +154,18 @@
 			
 			  return fileMap;
 			}
+
+			function highlightTableRow(filename, on) {
+			  // Find a row in #tableOut whose data-part matches filename
+			  const row = document.querySelector(`#tableOut tr[data-part="${filename}"]`);
+			  if (row) {
+			    if (on) {
+			      row.classList.add("highlight");
+			    } else {
+			      row.classList.remove("highlight");
+			    }
+			  }
+			}
 			
 			document.getElementById('svgObj').addEventListener('load', () => {
 			  const obj = document.getElementById('svgObj');
@@ -242,6 +260,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
