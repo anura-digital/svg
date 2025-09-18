@@ -25,12 +25,6 @@
 
 			<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
 	  	</div>
-		
-		<style>
-			.highlight {
-			  background-color: lightgreen !important;
-			}
-		</style>
 
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
 
@@ -112,8 +106,7 @@
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
-					const partNum = r[1] + '.svg';
-					html += '<tr data-part="${partNum}">' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
 				}
 				html += '</tbody></table>';
 			
@@ -154,30 +147,11 @@
 			    }
 			    fileMap[filename].push(hotspotId);
 
-			  	// --- Add hover listeners on this <g> ---
-			    g.addEventListener("mouseenter", () => {
-			      highlightTableRow(filename, true);
-			    });
-			    g.addEventListener("mouseleave", () => {
-			      highlightTableRow(filename, false);
-			    });
 			  });
 			
 			  return fileMap;
 			}
 
-			function highlightTableRow(filename, on) {
-			  // Find a row in #tableOut whose data-part matches filename.
-			  const row = document.querySelector(`#tableOut tr[data-part="${filename}"]`);
-			  if (row) {
-			    if (on) {
-			      row.classList.add("highlight");
-			    } else {
-			      row.classList.remove("highlight");
-			    }
-			  }
-			}
-			
 			document.getElementById('svgObj').addEventListener('load', () => {
 			  const obj = document.getElementById('svgObj');
 			  const svgDoc = obj.contentDocument;
@@ -271,6 +245,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
