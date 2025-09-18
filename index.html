@@ -105,6 +105,10 @@
 			
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
+
+				//////// TESTING ////////////
+				html += '<tr id="hotspot.17" onmouseover="ShowHotSpot(evt,&apos;17&apos;)" onmouseout="HideHotSpot(evt,&apos;17&apos;)"><td>0</td><td>TESTING</td>'
+				////////////////////////////
 				for (const r of rows) {
 					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
 				}
@@ -245,6 +249,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
