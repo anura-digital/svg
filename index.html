@@ -125,7 +125,7 @@
 			  const fileMap = {}; // { filename: [hotspotIds...] }
 			
 			  // Loop through every <a> inside the SVG
-			  svgRoot.querySelectorAll('a[xlink\\:href], a[href]').forEach(a => {
+			  svgRoot.querySelectorAll('a[xlink:href], a[href]').forEach(a => {
 				  console.log("looping through all <a> tags in svg, the current tag is ${a}");
 			    const href = a.getAttribute('xlink:href') || a.getAttribute('href');
 			    if (!href) return;
@@ -243,6 +243,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
