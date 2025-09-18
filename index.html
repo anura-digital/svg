@@ -122,15 +122,16 @@
 		<!-- script to make the 'order form' table have green highlighting like the SVG table -->
 		<script>
 			function collectFileHotspots(svgRoot) {
-			  const fileMap = {}; // { filename: [hotspotIds...] }
+			  const fileMap = {};
 			
 			  // Loop through every <a> inside the SVG
-			  svgRoot.querySelectorAll('a[xlink:href], a[href]').forEach(a => {
-				  console.log("looping through all <a> tags in svg, the current tag is ${a}");
-			    const href = a.getAttribute('xlink:href') || a.getAttribute('href');
+			  svgRoot.querySelectorAll('a').forEach(a => {
+			    // Handle both xlink:href and href
+			    const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") 
+			              || a.getAttribute("href");
 			    if (!href) return;
 			
-			    // Extract just the filename (strip Windows path or file://)
+			    // Extract just the filename
 			    const filename = href.split(/[/\\]/).pop();
 			
 			    // Find the <g> parent
@@ -139,7 +140,6 @@
 			
 			    const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
 			
-			    // Add to map
 			    if (!fileMap[filename]) {
 			      fileMap[filename] = [];
 			    }
@@ -148,17 +148,16 @@
 			
 			  return fileMap;
 			}
-
-			// Listen for when the object finishes loading the SVG
+			
 			document.getElementById('svgObj').addEventListener('load', () => {
 			  const obj = document.getElementById('svgObj');
-			  const svgDoc = obj.contentDocument;     // the SVG's DOM
+			  const svgDoc = obj.contentDocument;
 			  const svgRoot = svgDoc.querySelector('svg');
 			
 			  const result = collectFileHotspots(svgRoot);
 			  console.log("Hotspot map:", result);
 			});
-		</script>
+			</script>
 
 
 
@@ -243,6 +242,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
