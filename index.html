@@ -59,161 +59,108 @@
 			}
 		</script>
 		
+		<!-- script to reproduce SVG table as a 'shopping form' to order parts -->
+	   	<script>
+			const obj = document.getElementById('svgObj');
+			const out = document.getElementById('tableOut');
+
+			// When clicking the navigation links, load the data into the 'svgObj' rather than opening a new tab
+			document.querySelector('.menu').addEventListener('click', (e) => {
+				const a = e.target.closest('a');
+				if (!a) return;
+				e.preventDefault();
+				obj.data = a.getAttribute('href');
+			});
+		   
+		  // When SVG loads into 'objSvg' check that the the content is valid svg file
+			obj.addEventListener('load', () => {
+				const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
+				if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
+					handleSvgDoc(svgDoc);
+				}
+			});
+
+			// extract each rows information useing the Line#
+			function handleSvgDoc(svgDoc) {
+				// Collect rows: all groups whose id starts with "Line"
+				let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
 		
-<script>
-  const obj = document.getElementById('svgObj');
-  const out = document.getElementById('tableOut');
+				// Put Line1, Line2, ... in order
+				groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
+			
+				// Extract each cell text in order of appearance inside the group
+				const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
 
-  // Click a result link → load SVG into the <object> instead of opening a new tab
-  document.querySelector('.menu').addEventListener('click', (e) => {
-    const a = e.target.closest('a');
-    if (!a) return;
-    e.preventDefault();
-    obj.data = a.getAttribute('href');
-  });
+				renderTable(rows);
+		  	}
 
-  // --- Util: escape HTML ---
-  function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+			// build HTML table using the rows of Line#
+			function renderTable(rows) {
+				if (!rows.length) {
+				out.textContent = 'No Line* groups with <text> found.';
+				return;
+				}
+			
+				let html = '<table>';
+			
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
+				html += '<tbody>';
+				for (const r of rows) {
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
+				}
+				html += '</tbody></table>';
+			
+				out.innerHTML = html;
+			}
 
-  // --- Your existing hotspot collector (kept as-is) ---
-  function collectFileHotspots(svgRoot) {
-    const fileMap = {};
-    svgRoot.querySelectorAll('a').forEach(a => {
-      const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") || a.getAttribute("href");
-      if (!href) return;
-      const filename = href.split(/[/\\]/).pop();
-      const g = a.closest('g[id^="hotspot."]');
-      if (!g) return;
-      const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
-      (fileMap[filename] ||= []).push(hotspotId);
-    });
-    return fileMap;
-  }
+			// convert svg tags to valid html tags
+			function escapeHtml(s) {
+				return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+			}
+		</script>
 
-  // --- NEW: extract rows + attach hotspot ids per row ---
-  function extractRowsWithHotspots(svgDoc, fileMap) {
-    // 1) Get Line* groups in numeric order
-    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
-    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
 
-    // 2) For each line group:
-    //    - cells: all <text> in document order
-    //    - filenames: any <a> inside the line (href filename)
-    //    - hotspots: union of fileMap[filename]
-    return groups.map(g => {
-      const cells = [...g.querySelectorAll('text')].map(t => t.textContent.trim());
+		
+		<!-- script to make the 'order form' table have green highlighting like the SVG table -->
+		<script>
+			function collectFileHotspots(svgRoot) {
+			  const fileMap = {};
+			
+			  // Loop through every <a> inside the SVG
+			  svgRoot.querySelectorAll('a').forEach(a => {
+			    // Handle both xlink:href and href
+			    const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") 
+			              || a.getAttribute("href");
+			    if (!href) return;
+			
+			    // Extract just the filename
+			    const filename = href.split(/[/\\]/).pop();
+			
+			    // Find the <g> parent
+			    const g = a.closest('g[id^="hotspot."]');
+			    if (!g) return;
+			
+			    const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
+			
+			    if (!fileMap[filename]) {
+			      fileMap[filename] = [];
+			    }
+			    fileMap[filename].push(hotspotId);
 
-      const filenames = [...g.querySelectorAll('a')].map(a => {
-        const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") || a.getAttribute("href");
-        return href ? href.split(/[/\\]/).pop() : null;
-      }).filter(Boolean);
+			  });
+			
+			  return fileMap;
+			}
 
-      const hs = new Set();
-      filenames.forEach(fn => (fileMap[fn] || []).forEach(id => hs.add(id)));
-
-      return { cells, hotspots: [...hs] };
-    });
-  }
-
-  // --- Inject a CSS class in the SVG so we can green-tint hotspots when hovered from HTML ---
-  function ensureSvgHighlightStyle(svgDoc) {
-    const svg = svgDoc.querySelector('svg');
-    if (!svg) return;
-    if (svgDoc.getElementById('htmlHoverStyle')) return;
-
-    const style = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'style');
-    style.setAttribute('id', 'htmlHoverStyle');
-    // Apply to the whole hotspot group subtree
-    style.textContent = `
-      .html-hl * {
-        fill: #1aa34a !important;
-        stroke: #1aa34a !important;
-        opacity: 0.6 !important;
-      }
-    `;
-    svg.appendChild(style);
-  }
-
-  // --- Turn a list of hotspot ids on/off inside the SVG ---
-  function setSvgHotspots(svgDoc, ids, on) {
-    ids.forEach(id => {
-      const g = svgDoc.getElementById(id);
-      if (g) g.classList.toggle('html-hl', on);
-    });
-  }
-
-  // --- From a hotspot id, find and toggle matching HTML rows ---
-  function setHtmlRowsForHotspot(hotspotId, on) {
-    document.querySelectorAll(`#tableOut tbody tr[data-hotspots]`).forEach(tr => {
-      const ids = tr.dataset.hotspots.split(',');
-      if (ids.includes(hotspotId)) {
-        tr.classList.toggle('row-hl', on);
-      }
-    });
-  }
-
-  // --- Build the HTML table and wire all the hover handlers ---
-  function renderTable(rowsWithHs, svgDoc) {
-    if (!rowsWithHs.length) {
-      out.textContent = 'No Line* groups with <text> found.';
-      return;
-    }
-
-    // HTML
-    let html = '<table><thead><tr>' +
-      '<th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th>' +
-      '</tr></thead><tbody>';
-
-    rowsWithHs.forEach(({ cells, hotspots }) => {
-      const tds = cells.map(c => `<td>${escapeHtml(c)}</td>`).join('');
-      html += `<tr data-hotspots="${hotspots.join(',')}">${tds}<td><input type="number" step="1" min="0"/></td></tr>`;
-    });
-
-    html += '</tbody></table>';
-    out.innerHTML = html;
-
-    // HTML → SVG hover
-    out.querySelectorAll('tbody tr').forEach(tr => {
-      const ids = (tr.dataset.hotspots || '').split(',').filter(Boolean);
-      if (!ids.length) return;
-
-      tr.addEventListener('mouseenter', () => {
-        tr.classList.add('row-hl');
-        setSvgHotspots(svgDoc, ids, true);
-      });
-      tr.addEventListener('mouseleave', () => {
-        tr.classList.remove('row-hl');
-        setSvgHotspots(svgDoc, ids, false);
-      });
-    });
-
-    // SVG → HTML hover (mirror)
-    svgDoc.querySelectorAll('g[id^="hotspot."]').forEach(g => {
-      const id = g.id;
-      g.addEventListener('mouseenter', () => setHtmlRowsForHotspot(id, true));
-      g.addEventListener('mouseleave', () => setHtmlRowsForHotspot(id, false));
-    });
-  }
-
-  // --- Main: when the SVG loads, wire everything up ---
-  obj.addEventListener('load', () => {
-    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
-    if (!svgDoc || svgDoc.documentElement?.tagName.toLowerCase() !== 'svg') return;
-
-    ensureSvgHighlightStyle(svgDoc);
-
-    const svgRoot = svgDoc.querySelector('svg');
-    const fileMap = collectFileHotspots(svgRoot); // { filename: [ 'hotspot.8', ... ] }
-
-    // Build table rows alongside their hotspot ids
-    const rowsWithHs = extractRowsWithHotspots(svgDoc, fileMap);
-
-    // Finally, render the HTML table and wire hover both ways
-    renderTable(rowsWithHs, svgDoc);
-  });
-</script>
+			document.getElementById('svgObj').addEventListener('load', () => {
+			  const obj = document.getElementById('svgObj');
+			  const svgDoc = obj.contentDocument;
+			  const svgRoot = svgDoc.querySelector('svg');
+			
+			  const result = collectFileHotspots(svgRoot);
+			  console.log("Hotspot map:", result);
+			});
+			</script>
 
 
 
@@ -298,15 +245,3 @@
 	  </script>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
