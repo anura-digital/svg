@@ -112,7 +112,8 @@
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
+					const partNum = r[1] + '.svg';
+					html += '<tr data-part="${partNum}">' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
 				}
 				html += '</tbody></table>';
 			
@@ -158,9 +159,7 @@
 			}
 
 			function highlightTableRow(filename, on) {
-			  // Find a row in #tableOut whose data-part matches filename. want to strip away the ".svg" part of the filename
-				partNum = filename.split(/\./)[1]
-				console.log(partNum)
+			  // Find a row in #tableOut whose data-part matches filename.
 			  const row = document.querySelector(`#tableOut tr[data-part="${filename}"]`);
 			  if (row) {
 			    if (on) {
@@ -264,6 +263,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
