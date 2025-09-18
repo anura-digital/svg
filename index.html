@@ -16,11 +16,8 @@
 				<p>THIS IS WHERE THE JSON DATA WILL APPEAR</p>
 			</div>
 			
-			
-		
-			<!----------------------------------------- WILL EVENTUALLY HIDE THIS UNTIL THE SN HAS BEEN ENTERED AND VERIFIED ----------------------------------------->
 			<!-- Display an initial SVG -->
-			<object id= "svgObj" type="image/svg+xml"></object>
+			<object id= "svgObj" type="image/svg+xml">THIS IS WHERE THE SVG WILL APPEAR</object>
 
 			<!-- output for the 'ordering' table' -->
 			<div id="tableOut"></div>
@@ -56,24 +53,6 @@
 					} else {
 					  resultDiv.innerHTML = "No files found for SN: " + enteredSn;
 					}
-					
-			        // Case 1: JSON is a single object
-			        //if (data.sn === enteredSn) {
-			        //  resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(data.files);
-			        //} 
-			        
-					// Case 2: JSON is an array of objects
-			        //else if (Array.isArray(data)) {
-					//	const match = data.find(item => item.sn === enteredSn);
-				  	//	if (match) {
-					//		resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
-				  	//	} else {
-					//		resultDiv.innerHTML = "No files found for SN: " + enteredSn;
-				  	//	}
-			        //} 
-			        //else {
-			        //  resultDiv.innerHTML = "No match found.";
-			        //}
 			      } catch (error) {
 				        console.error("Error loading JSON:", error);
 				        resultDiv.innerHTML = "Error reading JSON file.";
@@ -219,26 +198,3 @@
 	  </script>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
