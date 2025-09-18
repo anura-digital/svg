@@ -35,9 +35,40 @@
 
 		<!------------------------ SCRIPTS ------------------------>
 		<script>
-			function isValidSn() {
+			async function isValidSn() {
+      		const enteredSn = document.getElementById("snInput").value.trim();
+      		const resultDiv = document.getElementById("result");
+
+		  	try 
+			{
+				// Load the JSON file
+				const response = await fetch("sn_docs.json");
+				const data = await response.json();
+		
+				// If JSON is a single object (like your example)
+				if (data.sn === enteredSn) {
+					resultDiv.innerHTML = "<strong>Files:</strong><br>" + data.files.join("<br>");
+				} 
+					
+				// If JSON is an array of objects (more scalable)
+				else if (Array.isArray(data)) {
+			  		const match = data.find(item => item.sn === enteredSn);
+			  	
+					if (match) {
+						resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
+				  	} else {
+						resultDiv.innerHTML = "No files found for SN: " + enteredSn;
+				  	}
+				} 
+				else {
+					resultDiv.innerHTML = "No match found.";
+				}
 				
-			}
+		  	} catch (error) {
+				console.error("Error loading JSON:", error);
+				resultDiv.innerHTML = "Error reading JSON file.";
+		  	}
+		}
 		</script>
 		
 		<!-- script to get the table of products -->
@@ -178,6 +209,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
