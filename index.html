@@ -43,11 +43,13 @@
 
 		<!-- script for checking JSON file -->
 		<script>
-			async function isValidSn() {
+			async function isValidSn() 
+			{
 	      		const enteredSn = document.getElementById("sn-input").value.trim();
 	      		const resultDiv = document.getElementById("result");
 	
-			  	try {
+			  	try 
+				{
 			        // Load the JSON file
 			        const response = await fetch("sn_docs.json");
 			        const data = await response.json();
@@ -74,13 +76,10 @@
 			          resultDiv.innerHTML = "No match found.";
 			        }
 			      } catch (error) {
-			        console.error("Error loading JSON:", error);
-			        resultDiv.innerHTML = "Error reading JSON file.";
-      } catch (error) {
-					console.error("Error loading JSON:", error);
-					resultDiv.innerHTML = "Error reading JSON file.";
-			  	}
-		}
+				        console.error("Error loading JSON:", error);
+				        resultDiv.innerHTML = "Error reading JSON file.";
+      				} 
+			}
 		</script>
 		
 		<!-- script to get the table of products -->
@@ -221,6 +220,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
