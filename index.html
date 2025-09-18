@@ -11,6 +11,8 @@
 			<label for="sn-input">SN:</label>
 			<input type="text" id="sn-input" />
 			<button onclick="isValidSn()">Search</button>
+			<p id="result"></p>
+			
 
 
 			<!----------------------------------------- WILL EVENTUALLY HIDE THIS UNTIL THE SN HAS BEEN ENTERED AND VERIFIED ----------------------------------------->
@@ -45,7 +47,7 @@
 				const response = await fetch("sn_docs.json");
 				const data = await response.json();
 		
-				// If JSON is a single object (like your example)
+				// If JSON is a single object
 				if (data.sn === enteredSn) {
 					resultDiv.innerHTML = "<strong>Files:</strong><br>" + data.files.join("<br>");
 				} 
@@ -209,6 +211,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
