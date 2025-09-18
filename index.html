@@ -11,7 +11,11 @@
 			<label for="sn-input">SN:</label>
 			<input type="text" id="sn-input" />
 			<button onclick="isValidSn()">Search</button>
-			<p id="result">THIS IS WHERE THE JSON DATA WILL APPEAR</p>
+			<div id="result">
+				<p>THIS IS WHERE THE JSON DATA WILL APPEAR</p>
+			</div>
+			
+			
 			
 
 
@@ -35,41 +39,44 @@
 			</div>
 	  	</div>
 
-		<!------------------------ SCRIPTS ------------------------>
+		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
+
+		<!-- script for checking JSON file -->
 		<script>
 			async function isValidSn() {
-      		const enteredSn = document.getElementById("sn-Input").value.trim();
-      		const resultDiv = document.getElementById("result");
-
-		  	try 
-			{
-				// Load the JSON file
-				const response = await fetch("sn_docs.json");
-				const data = await response.json();
-		
-				// If JSON is a single object
-				if (data.sn === enteredSn) {
-					resultDiv.innerHTML = "<strong>Files:</strong><br>" + data.files.join("<br>");
-				} 
+	      		const enteredSn = document.getElementById("sn-Input").value.trim();
+	      		const resultDiv = document.getElementById("result");
+	
+			  	try 
+				{
+					console.log("running the try block");
+					// Load the JSON file
+					const response = await fetch("sn_docs.json");
+					const data = await response.json();
+			
+					// If JSON is a single object
+					if (data.sn === enteredSn) {
+						resultDiv.innerHTML = "<strong>Files:</strong><br>" + data.files.join("<br>");
+					} 
+						
+					// If JSON is an array of objects (more scalable)
+					else if (Array.isArray(data)) {
+				  		const match = data.find(item => item.sn === enteredSn);
+				  	
+						if (match) {
+							resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
+					  	} else {
+							resultDiv.innerHTML = "No files found for SN: " + enteredSn;
+					  	}
+					} 
+					else {
+						resultDiv.innerHTML = "No match found.";
+					}
 					
-				// If JSON is an array of objects (more scalable)
-				else if (Array.isArray(data)) {
-			  		const match = data.find(item => item.sn === enteredSn);
-			  	
-					if (match) {
-						resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
-				  	} else {
-						resultDiv.innerHTML = "No files found for SN: " + enteredSn;
-				  	}
-				} 
-				else {
-					resultDiv.innerHTML = "No match found.";
-				}
-				
-		  	} catch (error) {
-				console.error("Error loading JSON:", error);
-				resultDiv.innerHTML = "Error reading JSON file.";
-		  	}
+			  	} catch (error) {
+					console.error("Error loading JSON:", error);
+					resultDiv.innerHTML = "Error reading JSON file.";
+			  	}
 		}
 		</script>
 		
@@ -211,6 +218,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
