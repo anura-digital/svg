@@ -49,7 +49,6 @@
 	
 			  	try 
 				{
-					console.log("running the try block");
 					// Load the JSON file
 					const response = await fetch("sn_docs.json");
 					const data = await response.json();
@@ -61,7 +60,7 @@
 						if (match) {
 							// prev version to show text version of file names
 							//resultDiv.innerHTML = "<strong>Files:</strong><br>" + match.files.join("<br>");
-
+							console.log("found a file match, setting up links");
 							// make the file names links to the actual SVG file
 							const links = match.files
 							    .map(file => `<a href="${file}" target="_blank">${file}</a>`)
@@ -220,6 +219,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
