@@ -1,166 +1,165 @@
 <!doctype html>
 <html lang="en">
 	<head>
-	  <meta charset="utf-8" />
-	  <meta name="viewport" content="width=device-width,initial-scale=1" />
-	  <title>TESTING SVG</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>TESTING SVG</title>
 	</head>
 	<body>
-	  <div id="stage" role="region">
-		
-		<!-- Display an initial SVG -->
-		<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml"></object>
+	  	<div id="stage">
+			<!-- Display an initial SVG -->
+			<object id= "svgObj" data="2-000-800-A.svg" type="image/svg+xml"></object>
 
-		<!-- Menu with direct links to the other files -->
-		<nav class="menu" aria-label="Related drawings">
-		  <span class="label">Open:</span>
-		  	<a href="2-000-801-A.svg">801-A</a>
-		  	<a href="2-000-893-A.svg">893-A</a>
-		  	<a href="2-001-799-A.svg">799-A</a>
-		</nav>
+			<!-- Menu with direct links to the other files -->
+			<nav class="menu" aria-label="Related drawings">
+				<span class="label">Open:</span>
+				<a href="2-000-801-A.svg">801-A</a>
+				<a href="2-000-893-A.svg">893-A</a>
+				<a href="2-001-799-A.svg">799-A</a>
+			</nav>
 
-		  <!-- output for the 'ordering' table' -->
-		 <div id="tableOut" aria-live="polite"></div>
-		  <button onclick="table_to_cart()">Add items to cart</button>
+			<!-- output for the 'ordering' table' -->
+			<div id="tableOut" aria-live="polite"></div>
+			<button onclick="table_to_cart()">Add items to cart</button>
 
-		  <div id="cart">
-		  </div>
-	  </div>
+			<div id="cart">
+			</div>
+	  	</div>
 
 		<!-- script to get the table of products -->
-	   <script>
-		  const obj = document.getElementById('svgObj');
-		  const out = document.getElementById('tableOut');
+	   	<script>
+			const obj = document.getElementById('svgObj');
+			const out = document.getElementById('tableOut');
 
-		   // When clicking the navigation links, load the data into the 'svgObj' rather than opening a new tab
-		  document.querySelector('.menu').addEventListener('click', (e) => {
-		    const a = e.target.closest('a');
-		    if (!a) return;
-		    e.preventDefault();
-		    obj.data = a.getAttribute('href');
-		  });
+			// When clicking the navigation links, load the data into the 'svgObj' rather than opening a new tab
+			document.querySelector('.menu').addEventListener('click', (e) => {
+				const a = e.target.closest('a');
+				if (!a) return;
+				e.preventDefault();
+				obj.data = a.getAttribute('href');
+			});
 		   
 		  // When SVG loads into 'objSvg' check that the the content is valid svg file
-		  obj.addEventListener('load', () => {
-		    const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
-		    if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
-		      handleSvgDoc(svgDoc);
-		    }
-		  });
+			obj.addEventListener('load', () => {
+				const svgDoc = obj.contentDocument || obj.getSVGDocument?.();
+				if (svgDoc && svgDoc.documentElement?.tagName.toLowerCase() === 'svg') {
+					handleSvgDoc(svgDoc);
+				}
+			});
 
 			// extract each rows information useing the Line#
-		  function handleSvgDoc(svgDoc) {
-		    // Collect rows: all groups whose id starts with "Line"
-		    let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
+			function handleSvgDoc(svgDoc) {
+				// Collect rows: all groups whose id starts with "Line"
+				let groups = [...svgDoc.querySelectorAll('g[id^="Line"]')];
 		
-		    // Put Line1, Line2, ... in order
-		    groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
-		
-		    // Extract each cell text in order of appearance inside the group
-		    const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
+				// Put Line1, Line2, ... in order
+				groups.sort((a, b) => (parseInt(a.id.match(/\d+/)) || 0) - (parseInt(b.id.match(/\d+/)) || 0));
+			
+				// Extract each cell text in order of appearance inside the group
+				const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
 
-		    renderTable(rows);
-		  }
+				renderTable(rows);
+		  	}
 
 			// build HTML table using the rows of Line#
-		  function renderTable(rows) {
-		    if (!rows.length) {
-		      out.textContent = 'No Line* groups with <text> found.';
-		      return;
-		    }
-		
-		    let html = '<table>';
-		
-			html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
-		    html += '<tbody>';
-		    for (const r of rows) {
-		      html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
-		    }
-		    html += '</tbody></table>';
-		
-		    out.innerHTML = html;
-		  }
+			function renderTable(rows) {
+				if (!rows.length) {
+				out.textContent = 'No Line* groups with <text> found.';
+				return;
+				}
+			
+				let html = '<table>';
+			
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
+				html += '<tbody>';
+				for (const r of rows) {
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0"/></td>' + '</tr>';
+				}
+				html += '</tbody></table>';
+			
+				out.innerHTML = html;
+			}
 
-		// convert svg tags to valid html tags
-		  function escapeHtml(s) {
-		    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-		  }
+			// convert svg tags to valid html tags
+			function escapeHtml(s) {
+				return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+			}
 		</script>
 		<script>
-		   // ---------------- CART LOGIC ----------------
+		   	// ---------------- CART LOGIC ----------------
 			let cart = JSON.parse(localStorage.getItem('cart')) || [];
 			
 			function saveCart() {
-			  localStorage.setItem('cart', JSON.stringify(cart));
+			  	localStorage.setItem('cart', JSON.stringify(cart));
 			}
 			
 			function renderCart() {
-			  if (!cart.length) {
-			    document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
-			    return;
-			  }
-			  let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
-			  for (const item of cart) {
-			    html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
-			  }
-			  html += '</table>';
-			  document.getElementById('cart').innerHTML = html;
+				if (!cart.length) {
+					document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
+					return;
+				}
+				let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
+				for (const item of cart) {
+					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
+				}
+				html += '</table>';
+				document.getElementById('cart').innerHTML = html;
 			}
 			
 			// Called when user clicks "Add to Cart"
 			function table_to_cart() {
-			  // Look for table rows in #tableOut
-			  const rows = document.querySelectorAll('#tableOut table tbody tr');
-			  rows.forEach(tr => {
-			    const cells = tr.querySelectorAll('td');
-			    const qtyInput = tr.querySelector('input');
-			    if (!qtyInput) return;
-			    const qty = parseInt(qtyInput.value, 10);
-			    if (qty > 0) {
-			      const item = {
-			        part: cells[1].textContent,   // 2nd column = Part Number
-			        desc: cells[2].textContent,   // 3rd column = Description
-			        qty
-			      };
-			      // If already in cart, update qty
-			      const existing = cart.find(i => i.part === item.part);
-			      if (existing) {
-			        existing.qty += qty;
-			      } else {
-			        cart.push(item);
-			      }
-			    }
-			  });
-			  saveCart();
-			  renderCart();
+				// Look for table rows in #tableOut
+				const rows = document.querySelectorAll('#tableOut table tbody tr');
+				rows.forEach(tr => {
+					const cells = tr.querySelectorAll('td');
+					const qtyInput = tr.querySelector('input');
+					if (!qtyInput) return;
+					const qty = parseInt(qtyInput.value, 10);
+					if (qty > 0) {
+						const item = {
+							part: cells[1].textContent,   // 2nd column = Part Number
+							desc: cells[2].textContent,   // 3rd column = Description
+							qty
+						};
+						// If already in cart, update qty
+						const existing = cart.find(i => i.part === item.part);
+						if (existing) {
+							existing.qty += qty;
+						} else {
+							cart.push(item);
+						}
+					}
+				});
+				saveCart();
+				renderCart();
 			}
 
 			// extract the rows from the cart for odoo to be able to access the cart data
 			function readCartFromTable() {
-			  const table = document.getElementById("cartTable");
-			  if (!table) return [];
-			  const rows = [];
-			  table.querySelectorAll("tbody tr").forEach(tr => {
-			    const tds = tr.querySelectorAll("td");
-			    if (tds.length >= 3) {
-			      const qtyInput = tds[2].querySelector("input");
-			      const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
-			      rows.push({
-			        part: tds[0].textContent.trim(),
-			        description: tds[1].textContent.trim(),
-			        qty: parseInt(qtyText.trim(), 10) || 0
-			      });
-			    }
-			  });
+				const table = document.getElementById("cartTable");
+				if (!table) return [];
+				const rows = [];
+				table.querySelectorAll("tbody tr").forEach(tr => {
+					const tds = tr.querySelectorAll("td");
+					if (tds.length >= 3) {
+						const qtyInput = tds[2].querySelector("input");
+						const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
+						rows.push({
+							part: tds[0].textContent.trim(),
+							description: tds[1].textContent.trim(),
+							qty: parseInt(qtyText.trim(), 10) || 0
+						});
+					}
+				});
 			  return rows;
 			}
 			
 			// Listen for parent requests
 			window.addEventListener("message", e => {
-			  if (e.data && e.data.type === "REQUEST_CART_ROWS") {
-			    const rows = readCartFromTable();
-			    e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
-			  }
+				if (e.data && e.data.type === "REQUEST_CART_ROWS") {
+					const rows = readCartFromTable();
+					e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
+			  	}
 			});
 	  </script>
 	</body>
