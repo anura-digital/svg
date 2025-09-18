@@ -13,7 +13,7 @@
 			<button onclick="isValidSn()">Search</button>
 			
 			<div id="result" class="menu">
-				<p>THIS IS WHERE THE JSON DATA WILL APPEAR</p>
+				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
 			</div>
 			
 			<!-- Display an initial SVG -->
@@ -23,13 +23,12 @@
 			<div id="tableOut"></div>
 			<button onclick="table_to_cart()">Add items to cart</button>
 
-			<div id="cart">
-			</div>
+			<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
 	  	</div>
 
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
 
-		<!-- script for checking JSON file -->
+		<!-- script for checking JSON file and providing links to each part -->
 		<script>
 			async function isValidSn() 
 			{
@@ -60,7 +59,7 @@
 			}
 		</script>
 		
-		<!-- script to get the table of products -->
+		<!-- script to get reproduce SVG table as a 'shopping form' to order parts -->
 	   	<script>
 			const obj = document.getElementById('svgObj');
 			const out = document.getElementById('tableOut');
@@ -119,8 +118,50 @@
 				return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 			}
 		</script>
+
+		<!-- script to make the 'order form' table have green highlighting like the SVG table -->
 		<script>
-		   	// ---------------- CART LOGIC ----------------
+			function collectFileHotspots(svgRoot) {
+			  const fileMap = {}; // { filename: [hotspotIds...] }
+			
+			  // Loop through every <a> inside the SVG
+			  svgRoot.querySelectorAll('a[xlink\\:href], a[href]').forEach(a => {
+			    const href = a.getAttribute('xlink:href') || a.getAttribute('href');
+			    if (!href) return;
+			
+			    // Extract just the filename (strip Windows path or file://)
+			    const filename = href.split(/[/\\]/).pop();
+			
+			    // Find the <g> parent
+			    const g = a.closest('g[id^="hotspot."]');
+			    if (!g) return;
+			
+			    const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
+			
+			    // Add to map
+			    if (!fileMap[filename]) {
+			      fileMap[filename] = [];
+			    }
+			    fileMap[filename].push(hotspotId);
+			  });
+			
+			  return fileMap;
+			}
+
+			// Example usage:
+			document.addEventListener('DOMContentLoaded', () => {
+			  const svg = document.querySelector('svg'); // or obj.contentDocument.querySelector('svg')
+			  const result = collectFileHotspots(svg);
+			  console.log(result);
+			});
+		</script>
+
+
+
+		
+
+		<!-- script to produce a cart which takes the items from the filled out form and saves them into local storage for persistency -->
+		<script>
 			let cart = JSON.parse(localStorage.getItem('cart')) || [];
 			
 			function saveCart() {
@@ -198,3 +239,4 @@
 	  </script>
 	</body>
 </html>
+
