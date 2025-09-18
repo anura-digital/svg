@@ -153,6 +153,14 @@
 			      fileMap[filename] = [];
 			    }
 			    fileMap[filename].push(hotspotId);
+
+			  	// --- Add hover listeners on this <g> ---
+			    g.addEventListener("mouseenter", () => {
+			      highlightTableRow(filename, true);
+			    });
+			    g.addEventListener("mouseleave", () => {
+			      highlightTableRow(filename, false);
+			    });
 			  });
 			
 			  return fileMap;
@@ -263,6 +271,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
