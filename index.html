@@ -18,14 +18,24 @@
 			  flex-direction: row;         /* left/right layout: SVG on left, order/cart on right */
 			  justify-content: flex-start; /* align items side by side */
 			  gap: 20px;                   /* spacing between svg and order/cart column */
-			  flex: auto;
 			}
 			
 			#flex-order-container {
 			  display: flex;
 			  flex-direction: column;      /* stack tableOut/button and cart vertically */
 			  gap: 20px;                   /* spacing between table and cart */
-			  flex: 0;                     /* allow this to grow */
+			  flex: 1;                     /* allow this to grow */
+			  max-width: 50%;
+			}
+
+			#tableOut,
+			#cart-container {
+			  width: 100%;                 /* make both take full column width */
+			  box-sizing: border-box;      /* so padding/border don't break alignment */
+			}
+			
+			#btnAddToCart {
+			  margin-top: 10px;            /* spacing from table */
 			}
 		
 		</style>
@@ -239,6 +249,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
