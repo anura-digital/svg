@@ -53,24 +53,29 @@
 
 					// Look for a system with a matching SN
     				const match = data.systems.find(system => system.sn === enteredSn);
+					if (match) {
+					  resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
+					} else {
+					  resultDiv.innerHTML = "No files found for SN: " + enteredSn;
+					}
 					
 			        // Case 1: JSON is a single object
-			        if (data.sn === enteredSn) {
-			          resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(data.files);
-			        } 
+			        //if (data.sn === enteredSn) {
+			        //  resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(data.files);
+			        //} 
 			        
 					// Case 2: JSON is an array of objects
-			        else if (Array.isArray(data)) {
-						const match = data.find(item => item.sn === enteredSn);
-				  		if (match) {
-							resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
-				  		} else {
-							resultDiv.innerHTML = "No files found for SN: " + enteredSn;
-				  		}
-			        } 
-			        else {
-			          resultDiv.innerHTML = "No match found.";
-			        }
+			        //else if (Array.isArray(data)) {
+					//	const match = data.find(item => item.sn === enteredSn);
+				  	//	if (match) {
+					//		resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
+				  	//	} else {
+					//		resultDiv.innerHTML = "No files found for SN: " + enteredSn;
+				  	//	}
+			        //} 
+			        //else {
+			        //  resultDiv.innerHTML = "No match found.";
+			        //}
 			      } catch (error) {
 				        console.error("Error loading JSON:", error);
 				        resultDiv.innerHTML = "Error reading JSON file.";
@@ -216,6 +221,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
