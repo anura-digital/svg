@@ -32,7 +32,7 @@
 				<!-- output for the 'ordering' table' -->
 				<div id="order-form-container">
 					<div id="tableOut"></div>
-					<button onclick="table_to_cart()">Add items to cart</button>
+					<button id="btnAddToCart" onclick="table_to_cart()">Add items to cart</button>
 				</div>
 			</div>
 			
@@ -112,9 +112,11 @@
 
 			// build HTML table using the rows of Line#
 			function renderTable(rows) {
+				const out = document.getElementById("tableOut");
+  				const btn = document.getElementById("btnAddToCart");
 				if (!rows.length) {
-				out.textContent = 'No Line* groups with <text> found.';
-				return;
+					btn.style.display = "none";  // if no table then dont show button
+					return;
 				}
 			
 				let html = '<table>';
@@ -127,6 +129,7 @@
 				html += '</tbody></table>';
 			
 				out.innerHTML = html;
+				btn.style.display = "inline-block"; // button only showed when table/data has been rendered
 			}
 
 			// convert svg tags to valid html tags
@@ -135,52 +138,6 @@
 			}
 		</script>
 
-
-		
-		<!-- script to make the 'order form' table have green highlighting like the SVG table -->
-		<script>
-			function collectFileHotspots(svgRoot) {
-			  const fileMap = {};
-			
-			  // Loop through every <a> inside the SVG
-			  svgRoot.querySelectorAll('a').forEach(a => {
-			    // Handle both xlink:href and href
-			    const href = a.getAttributeNS("http://www.w3.org/1999/xlink", "href") 
-			              || a.getAttribute("href");
-			    if (!href) return;
-			
-			    // Extract just the filename
-			    const filename = href.split(/[/\\]/).pop();
-			
-			    // Find the <g> parent
-			    const g = a.closest('g[id^="hotspot."]');
-			    if (!g) return;
-			
-			    const hotspotId = g.getAttribute('id'); // e.g. "hotspot.8"
-			
-			    if (!fileMap[filename]) {
-			      fileMap[filename] = [];
-			    }
-			    fileMap[filename].push(hotspotId);
-
-			  });
-			
-			  return fileMap;
-			}
-
-			document.getElementById('svgObj').addEventListener('load', () => {
-			  const obj = document.getElementById('svgObj');
-			  const svgDoc = obj.contentDocument;
-			  const svgRoot = svgDoc.querySelector('svg');
-			
-			  const result = collectFileHotspots(svgRoot);
-			  console.log("Hotspot map:", result);
-			});
-			</script>
-
-
-
-		
 
 		<!-- script to produce a cart which takes the items from the filled out form and saves them into local storage for persistency -->
 		<script>
@@ -261,5 +218,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
