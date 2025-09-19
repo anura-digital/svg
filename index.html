@@ -147,16 +147,7 @@
 				}
 			});
 
-			function currentParentBase() {
-				try {
-			      // Resolve to a proper URL, then take the filename
-			      const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
-			      // Strip ".svg"
-			      return file.replace(/\.svg$/i, '');
-			    } catch {
-			      return '';
-			    }
-			}
+
 			// extract each rows information useing the Line#
 			function handleSvgDoc(svgDoc) {
 				// Collect rows: all groups whose id starts with "Line"
@@ -168,11 +159,11 @@
 				// Extract each cell text in order of appearance inside the group
 				const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
 
-				renderTable(rows, currentParentBase());
+				renderTable(rows);
 		  	}
 
 			// build HTML table using the rows of Line#
-			function renderTable(rows, parentBase) {
+			function renderTable(rows) {
 				const out = document.getElementById("tableOut");
   				const btn = document.getElementById("btnAddToCart");
 				if (!rows.length) {
@@ -182,10 +173,10 @@
 			
 				let html = '<table>';
 			
-				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>PARENT PART</th><th>ORDER QTY</th></tr></thead>'
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') +  `<td>${escapeHtml(parentBase)}</td>` + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
 				}
 				html += '</tbody></table>';
 			
@@ -207,6 +198,18 @@
 			function saveCart() {
 			  	localStorage.setItem('cart', JSON.stringify(cart));
 			}
+
+			function currentParentBaseFromObject() {
+			  try {
+			    const obj = document.getElementById('svgObj');
+			    const file = new URL(obj.data, window.location.href).pathname.split('/').pop(); // e.g. "2-000-800-A.svg"
+			    // strip ".svg"
+			    return file.replace(/\.svg$/i, '');
+			  } catch {
+			    return '';
+			  }
+			}
+
 			
 			function renderCart() {
   if (!cart.length) {
@@ -238,34 +241,36 @@
 }
 
 			
-			// Called when user clicks "Add to Cart"
-			function table_to_cart() {
-				// Look for table rows in #tableOut
-				const rows = document.querySelectorAll('#tableOut table tbody tr');
-				rows.forEach(tr => {
-					const cells = tr.querySelectorAll('td');
-					const qtyInput = tr.querySelector('input');
-					if (!qtyInput) return;
-					const qty = parseInt(qtyInput.value, 10);
-					if (qty > 0) {
-						const item = {
-							part: cells[1].textContent,   // 2nd column = Part Number
-							desc: cells[2].textContent,   // 3rd column = Description
-							parent: cells[4].textContent,
-							qty
-						};
-						// If already in cart, update qty
-						const existing = cart.find(i => i.part === item.part && i.parent === item.parent);
-						if (existing) {
-							existing.qty += qty;
-						} else {
-							cart.push(item);
-						}
-					}
-				});
-				saveCart();
-				renderCart();
-			}
+function table_to_cart() {
+  const rows = document.querySelectorAll('#tableOut table tbody tr');
+  const parent = currentParentBaseFromObject();   // <- compute once
+
+  rows.forEach(tr => {
+    const cells = tr.querySelectorAll('td');
+    const qtyInput = tr.querySelector('input');
+    if (!qtyInput) return;
+
+    const qty = parseInt(qtyInput.value, 10) || 0;
+    if (qty <= 0) return;
+
+    const item = {
+      part:   (cells[1]?.textContent || '').trim(), // PART NUMBER
+      desc:   (cells[2]?.textContent || '').trim(), // DESCRIPTION
+      parent,                                        // <- from current SVG
+      qty
+    };
+
+    // Dedup by part+parent
+    const key = `${item.part}::${item.parent}`;
+    const existing = cart.find(i => `${i.part}::${i.parent}` === key);
+    if (existing) existing.qty += qty;
+    else cart.push(item);
+  });
+
+  saveCart();
+  renderCart();
+}
+
 
 			// extract the rows from the cart for odoo to be able to access the cart data
 			function readCartFromTable() {
@@ -297,6 +302,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
