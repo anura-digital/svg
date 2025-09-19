@@ -69,7 +69,7 @@
 			      border-bottom: 1px solid #00205b; padding-bottom: 2px;
 			  }
 			  .cart-lines { margin: 0; padding-left: 16px; list-style: none; font-family: "Rogan Regular";}
-			  /*.cart-line { display: grid; grid-template-columns: 160px 2fr 50px; gap: 12px; padding: 4px 0; align-items: center; }*/
+			  .cart-line { display: grid; grid-template-columns: 160px 2fr 50px; gap: 12px; padding: 4px 0; align-items: center; }
 			  .cart-line__part { font-weight: 600; }
 			  .cart-line__qty { text-align: right; white-space: nowrap; }
 		</style>
@@ -176,25 +176,43 @@
 
 			// build HTML table using the rows of Line#
 			function renderTable(rows) {
-				const out = document.getElementById("tableOut");
-  				const btn = document.getElementById("btnAddToCart");
-				if (!rows.length) {
-					btn.style.display = "none";  // if no table then dont show button
-					return;
-				}
-			
-				let html = '<table>';
-			
-				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
-				html += '<tbody>';
-				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
-				}
-				html += '</tbody></table>';
-			
-				out.innerHTML = html;
-				btn.style.display = "inline-block"; // button only showed when table/data has been rendered
-			}
+  const out = document.getElementById("tableOut");
+  const btn = document.getElementById("btnAddToCart");
+  if (!rows.length) {
+    btn.style.display = "none";  // if no table then dont show button
+    return;
+  }
+
+  let html = '<table>';
+
+  html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
+  html += '<tbody>';
+  for (const r of rows) {
+    html += '<tr>'
+          + r.map(c => `<td>${escapeHtml(c)}</td>`).join('')
+          + `<td>
+               <div class="qty-control">
+                 <button type="button" class="qty-btn" onclick="changeQty(this, -1)">-</button>
+                 <input type="number" step="1" min="0" value="0" size="4"/>
+                 <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
+               </div>
+             </td>`
+          + '</tr>';
+  }
+  html += '</tbody></table>';
+
+  out.innerHTML = html;
+  btn.style.display = "inline-block"; // button only showed when table/data has been rendered
+}
+
+			// helper function to adjust qty input
+function changeQty(btn, delta) {
+  const input = btn.parentElement.querySelector('input');
+  let val = parseInt(input.value, 10) || 0;
+  val += delta;
+  if (val < 0) val = 0;
+  input.value = val;
+}
 
 			// convert svg tags to valid html tags
 			function escapeHtml(s) {
@@ -324,6 +342,7 @@ function table_to_cart() {
 	  </script>
 	</body>
 </html>
+
 
 
 
