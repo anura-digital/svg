@@ -253,7 +253,7 @@ function renderCart() {
     groups.get(key).push(item);
   }
 
-  // Optional: sort parents and items
+  // sort parents and items
   const sortedParents = Array.from(groups.keys()).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
   let html = '<div class="cart-groups">';
 
@@ -270,6 +270,7 @@ function renderCart() {
               <span class="cart-line__part">${i.part}</span>
               <span class="cart-line__desc">${i.desc}</span>
               <span class="cart-line__qty">${i.qty}</span>
+			  <button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
             </li>
           `).join('')}
         </ul>
@@ -280,6 +281,26 @@ function renderCart() {
   el.innerHTML = html;
 }
 
+// helpers (safe for HTML/attributes)
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(s) {
+  return String(s).replace(/["'\\]/g, m => ({'"':'&quot;', "'":'&#39;', '\\':'\\\\'}[m]));
+}
+			
+
+			function removeCartItem(part, parent) {
+  const key = `${part}::${parent || ''}`;
+  const idx = cart.findIndex(i => `${i.part}::${i.parent || ''}` === key);
+  if (idx !== -1) {
+    cart.splice(idx, 1);
+    saveCart();
+    renderCart();
+  }
+}
+
+			
 			
 function table_to_cart() {
   const rows = document.querySelectorAll('#tableOut table tbody tr');
@@ -342,6 +363,7 @@ function table_to_cart() {
 	  </script>
 	</body>
 </html>
+
 
 
 
