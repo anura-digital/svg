@@ -234,7 +234,7 @@
 						const item = {
 							part: cells[1].textContent,   // 2nd column = Part Number
 							desc: cells[2].textContent,   // 3rd column = Description
-							parent: cells[3].textContent,
+							parent: cells[3].textContent,	// 4th column = parent part
 							qty
 						};
 						// If already in cart, update qty
@@ -263,6 +263,7 @@
 						rows.push({
 							part: tds[0].textContent.trim(),
 							description: tds[1].textContent.trim(),
+							parent: tds[2].textContent.trim(),
 							qty: parseInt(qtyText.trim(), 10) || 0
 						});
 					}
@@ -280,6 +281,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
