@@ -213,11 +213,11 @@
 					document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
 					return;
 				}
-				let html = '<h3>Shopping Cart</h3><table id="cartTable"><thead><tr><th>Part Number</th><th>Description</th><th>PARENT PART</th><th>Qty</th></tr></thead><tbody>';
+				let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
 				for (const item of cart) {
-					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.parent}</td><td>${item.qty}</td></tr>`;
+					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
 				}
-				html += '</tbody></table>';
+				html += '</table>';
 				document.getElementById('cart').innerHTML = html;
 			}
 			
@@ -234,7 +234,6 @@
 						const item = {
 							part: cells[1].textContent,   // 2nd column = Part Number
 							desc: cells[2].textContent,   // 3rd column = Description
-							parent: cells[4].textContent,	// 4th column = parent part
 							qty
 						};
 						// If already in cart, update qty
@@ -257,14 +256,12 @@
 				const rows = [];
 				table.querySelectorAll("tbody tr").forEach(tr => {
 					const tds = tr.querySelectorAll("td");
-					console.log(tds);							// added to see where/if parent shows up
 					if (tds.length >= 3) {
-						const qtyInput = tds[3].querySelector("input");
-						const qtyText = qtyInput ? qtyInput.value : tds[3].textContent;
+						const qtyInput = tds[2].querySelector("input");
+						const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
 						rows.push({
 							part: tds[0].textContent.trim(),
 							description: tds[1].textContent.trim(),
-							parent: tds[2].textContent.trim(),
 							qty: parseInt(qtyText.trim(), 10) || 0
 						});
 					}
@@ -282,6 +279,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
