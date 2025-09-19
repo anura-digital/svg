@@ -213,11 +213,11 @@
 					document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
 					return;
 				}
-				let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>PARENT PART</th><th>Qty</th></tr>';
+				let html = '<h3>Shopping Cart</h3><table id="cartTable"><thead><tr><th>Part Number</th><th>Description</th><th>PARENT PART</th><th>Qty</th></tr></thead><tbody>';
 				for (const item of cart) {
 					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.parent}</td><td>${item.qty}</td></tr>`;
 				}
-				html += '</table>';
+				html += '</tbody></table>';
 				document.getElementById('cart').innerHTML = html;
 			}
 			
@@ -234,7 +234,7 @@
 						const item = {
 							part: cells[1].textContent,   // 2nd column = Part Number
 							desc: cells[2].textContent,   // 3rd column = Description
-							parent: cells[3].textContent,	// 4th column = parent part
+							parent: cells[4].textContent,	// 4th column = parent part
 							qty
 						};
 						// If already in cart, update qty
@@ -281,6 +281,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
