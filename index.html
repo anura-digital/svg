@@ -94,6 +94,30 @@
 				white-space: nowrap; 
 			}
 
+			/* styling for the add and minus buttons in the form */
+			.qty-control {
+				display: grid;
+				grid-template-columns: 30px 1fr 30px; /* left button, input, right button */
+				align-items: center;
+				gap: 4px;
+				max-width: 120px;  /* keep the whole control compact */
+			}
+				
+			.qty-control input {
+			   text-align: center;
+			   width: 100%;       /* input expands in middle column */
+			   min-width: 40px;
+			   box-sizing: border-box;
+			}
+				
+			.qty-btn {
+			   display: flex;
+			   align-items: center;
+			   justify-content: center;
+			   width: 30px;
+			   height: 30px;
+			   cursor: pointer;
+			}
 		</style>
 	</head>
 	
@@ -395,3 +419,4 @@
 	  </script>
 	</body>
 </html>
+
