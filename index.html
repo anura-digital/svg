@@ -168,11 +168,11 @@
 				// Extract each cell text in order of appearance inside the group
 				const rows = groups.map(g => [...g.querySelectorAll('text')].map(t => t.textContent.trim()));
 
-				renderTable(rows);
+				renderTable(rows, currentParentBase());
 		  	}
 
 			// build HTML table using the rows of Line#
-			function renderTable(rows) {
+			function renderTable(rows, parentBase) {
 				const out = document.getElementById("tableOut");
   				const btn = document.getElementById("btnAddToCart");
 				if (!rows.length) {
@@ -279,4 +279,5 @@
 	  </script>
 	</body>
 </html>
+
 
