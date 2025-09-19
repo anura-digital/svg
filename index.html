@@ -23,8 +23,9 @@
 			#svgObj {
 			  flex: 2;              /* don’t let svg shrink */
 			  max-width: 60%;              /* keep svg from being too big */
-				height:auto;
-				flex-shrink: 1;
+			  height:auto;
+			  flex-shrink: 1;
+			  flex-grow: 2;
 			}
 			
 			#flex-order-container {
@@ -39,13 +40,24 @@
 			#cart-container {
 			  width: 100%;                 /* form table and cart full width */
 			  box-sizing: border-box;      /* so padding/border don't break alignment */
-				flex-shrink: 2;
+			  flex-shrink: 2;
+			  flex-grow: 1;
 			}
 			
 			#btnAddToCart {
 			  margin-top: 10px;            /* little space between button and order form */
+			  font-family: "Rogan Light";
+			  cursor: pointer;
+			  background-color: #00205b;
+			  color: white;
+			  text-align: center;
+			  border-radius: 20px;
+			  border: 2px solid #0072ce;
+			  letter-spacing: 1px;
+			  
 			}
 
+				
 			
 		</style>
 	</head>
@@ -259,6 +271,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
