@@ -152,7 +152,7 @@
 			      // Resolve to a proper URL, then take the filename
 			      const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
 			      // Strip ".svg"
-			      return file.replace(/\.svg$/i, ''); // e.g. "2-000-800-A.svg" -> "2-000-800"
+			      return file.replace(/\.svg$/i, '');
 			    } catch {
 			      return '';
 			    }
@@ -227,6 +227,7 @@
 				const rows = document.querySelectorAll('#tableOut table tbody tr');
 				rows.forEach(tr => {
 					const cells = tr.querySelectorAll('td');
+					console.log(cells);								// have added to see what parent is picked up as
 					const qtyInput = tr.querySelector('input');
 					if (!qtyInput) return;
 					const qty = parseInt(qtyInput.value, 10);
@@ -257,6 +258,7 @@
 				const rows = [];
 				table.querySelectorAll("tbody tr").forEach(tr => {
 					const tds = tr.querySelectorAll("td");
+					console.log(tds);							// added to see where/if parent shows up
 					if (tds.length >= 3) {
 						const qtyInput = tds[2].querySelector("input");
 						const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
@@ -281,6 +283,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
