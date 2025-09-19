@@ -14,46 +14,46 @@
 			}
 			
 			#flex-main-container {
-			  display: flex;
-			  flex-direction: row;         /* left/right layout: SVG on left, order/cart on right */
-			  justify-content: flex-start; /* align items side by side */
-			  gap: 20px;                   /* spacing between svg and order/cart column */
+				display: flex;
+				flex-direction: row;         /* left/right layout: SVG on left, order/cart on right */
+				justify-content: flex-start; /* align items side by side */
+				gap: 20px;                   /* spacing between svg and order/cart column */
 			}
 
 			#svgObj {
-			  flex: 2;              /* take up more space than order form and cart*/
-			  max-width: 60%;       /* keep svg from being too big */
-			  height:auto;
-			  flex-shrink: 1;		/* shrinks slower than order form*/
-			  flex-grow: 2;			/* grows faster than order form */
+				flex: 2;            /* take up more space than order form and cart*/
+				max-width: 60%;     /* keep svg from being too big */
+				height:auto;
+				flex-shrink: 1;		/* shrinks slower than order form*/
+				flex-grow: 2;		/* grows faster than order form */
 			}
 			
 			#flex-order-container {
-			  display: flex;
-			  flex-direction: column;      /* stack order form (and button) and cart vertically */
-			  gap: 20px;                   /* spacing between table and cart */
-			  flex: 1;                     
-			  max-width: 40%;
+				display: flex;
+				flex-direction: column;   /* stack order form (and button) and cart vertically */
+				gap: 20px;                /* spacing between table and cart */
+				flex: 1;                     
+				max-width: 40%;
 			}
 
 			#tableOut,
 			#cart-container {
-			  width: 100%;                 /* form table and cart full width */
-			  box-sizing: border-box;      /* so padding/border don't break alignment */
-			  flex-shrink: 2;			   /* shrinks faster than order form*/
-			  flex-grow: 1;				  /* grows faster than order form */
+				width: 100%;               /* form table and cart full width */
+				box-sizing: border-box;    /* so padding/border don't break alignment */
+				flex-shrink: 2;			   /* shrinks faster than order form*/
+				flex-grow: 1;			   /* grows faster than order form */
 			}
 			
 			button {
-			  font-family: "Rogan Regular";
-			  font-size: 1.0em;
-			  cursor: pointer;
-			  background-color: #00205b;
-			  color: white;
-			  text-align: center;
-			  border-radius: 10px;
-			  border: 1px solid #0072ce;
-			  letter-spacing: 1px;
+				font-family: "Rogan Regular";
+				font-size: 1.0em;
+				cursor: pointer;
+				background-color: #00205b;
+				color: white;
+				text-align: center;
+				border-radius: 10px;
+				border: 1px solid #0072ce;
+				letter-spacing: 1px;
 			}
 
 			button:hover {
@@ -61,17 +61,39 @@
 				border: 1px solid #00205b;
 			}	
 
-			  .cart-groups { font: 14px/1.4 system-ui; }
-			  .cart-parent { margin: 12px 0 18px; }
-			  .cart-parent__title {
-				  font-family: "Rogan Regular";
-			      font-weight: 700; letter-spacing: .3px; margin-bottom: 6px;
-			      border-bottom: 1px solid #00205b; padding-bottom: 2px;
-			  }
-			  .cart-lines { margin: 0; padding-left: 16px; list-style: none; font-family: "Rogan Regular";}
-			  .cart-line { display: grid; grid-template-columns: 160px 2fr 50px; gap: 12px; padding: 4px 0; align-items: center; }
-			  .cart-line__part { font-weight: 600; }
-			  .cart-line__qty { text-align: right; white-space: nowrap; }
+			/* styling for the cart - making individual parts indented underneath a parent part */
+			.cart-groups { font: 14px/1.4 system-ui; }
+
+			.cart-parent { margin: 12px 0 18px; }
+
+			.cart-parent__title {
+				font-family: "Rogan Regular";
+				font-weight: 700; letter-spacing: .3px; margin-bottom: 6px;
+				border-bottom: 1px solid #00205b; padding-bottom: 2px;
+			}
+
+			.cart-lines { 
+				margin: 0; 
+				padding-left: 16px; 
+				list-style: none; 
+				font-family: "Rogan Regular";
+			}
+
+			.cart-line { 
+				display: grid; 
+				grid-template-columns: 160px 2fr 50px; 
+				gap: 12px; 
+				padding: 4px 0; 
+				align-items: center; 
+			}
+
+			.cart-line__part { font-weight: 600; }
+
+			.cart-line__qty { 
+				text-align: right; 
+				white-space: nowrap; 
+			}
+
 		</style>
 	</head>
 	
@@ -122,19 +144,19 @@
 			
 			        // Function to build links
 			        const buildLinks = (files) => 
-			          files.map(file => `<a href="${file}" target="_blank">${file}</a>`).join("<br>");
+			          	files.map(file => `<a href="${file}" target="_blank">${file}</a>`).join("<br>");
 
 					// Look for a system with a matching SN
     				const match = data.systems.find(system => system.sn === enteredSn);
 					if (match) {
-					  resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
+					  	resultDiv.innerHTML = "<strong>Files:</strong><br>" + buildLinks(match.files);
 					} else {
-					  resultDiv.innerHTML = "No files found for SN: " + enteredSn;
+					  	resultDiv.innerHTML = "No files found for SN: " + enteredSn;
 					}
-			      } catch (error) {
-				        console.error("Error loading JSON:", error);
-				        resultDiv.innerHTML = "Error reading JSON file.";
-      				} 
+				} catch (error) {
+					console.error("Error loading JSON:", error);
+					resultDiv.innerHTML = "Error reading JSON file.";
+				} 
 			}
 		</script>
 		
@@ -176,43 +198,42 @@
 
 			// build HTML table using the rows of Line#
 			function renderTable(rows) {
-  const out = document.getElementById("tableOut");
-  const btn = document.getElementById("btnAddToCart");
-  if (!rows.length) {
-    btn.style.display = "none";  // if no table then dont show button
-    return;
-  }
+				const out = document.getElementById("tableOut");
+				const btn = document.getElementById("btnAddToCart");
+				if (!rows.length) {
+					btn.style.display = "none";  // if no table then dont show button
+					return;
+				}
 
-  let html = '<table>';
+  				let html = '<table>';
 
-  html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
-  html += '<tbody>';
-  for (const r of rows) {
-    html += '<tr>'
-          + r.map(c => `<td>${escapeHtml(c)}</td>`).join('')
-          + `<td>
-               <div class="qty-control">
-                 <button type="button" class="qty-btn" onclick="changeQty(this, -1)">-</button>
-                 <input type="number" step="1" min="0" value="0" size="4"/>
-                 <button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
-               </div>
-             </td>`
-          + '</tr>';
-  }
-  html += '</tbody></table>';
-
-  out.innerHTML = html;
-  btn.style.display = "inline-block"; // button only showed when table/data has been rendered
-}
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
+				html += '<tbody>';
+				for (const r of rows) {
+					html += '<tr>'
+						+ r.map(c => `<td>${escapeHtml(c)}</td>`).join('')
+						+ `<td>
+							<div class="qty-control">
+								<button type="button" class="qty-btn" onclick="changeQty(this, -1)">-</button>
+								<input type="number" step="1" min="0" value="0" size="4"/>
+								<button type="button" class="qty-btn" onclick="changeQty(this, 1)">+</button>
+							</div>
+							</td>`
+						+ '</tr>';
+				}
+				html += '</tbody></table>';
+				out.innerHTML = html;
+  				btn.style.display = "inline-block"; // button only showed when table/data has been rendered
+			}
 
 			// helper function to adjust qty input
-function changeQty(btn, delta) {
-  const input = btn.parentElement.querySelector('input');
-  let val = parseInt(input.value, 10) || 0;
-  val += delta;
-  if (val < 0) val = 0;
-  input.value = val;
-}
+			function changeQty(btn, delta) {
+				const input = btn.parentElement.querySelector('input');
+				let val = parseInt(input.value, 10) || 0;
+				val += delta;
+				if (val < 0) val = 0;
+				input.value = val;
+			}
 
 			// convert svg tags to valid html tags
 			function escapeHtml(s) {
@@ -230,152 +251,147 @@ function changeQty(btn, delta) {
 			}
 
 			function currentParentBaseFromObject() {
-			  try {
-			    const obj = document.getElementById('svgObj');
-			    const file = new URL(obj.data, window.location.href).pathname.split('/').pop(); // e.g. "2-000-800-A.svg"
-			    // strip ".svg"
-			    return file.replace(/\.svg$/i, '');
-			  } catch {
-			    return '';
-			  }
+				try {
+					const obj = document.getElementById('svgObj');
+					const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
+					
+					return file.replace(/\.svg$/i, '');		// strip ".svg"
+				} catch {
+					return '';
+				}
 			}
 
 			
-function renderCart() {
-  const el = document.getElementById('cart');
-  if (!cart.length) { el.innerHTML = "<p>Cart is empty.</p>"; return; }
+			function renderCart() {
+				const el = document.getElementById('cart');
+				if (!cart.length) { 
+					el.innerHTML = "<p>Cart is empty.</p>"; return; 
+				}
 
-  // Group by parent ("" -> "(no parent)")
-  const groups = new Map();
-  for (const item of cart) {
-    const key = (item.parent ?? '').trim();
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(item);
-  }
+				// Group by parent ("" -> "(no parent)")
+				const groups = new Map();
+				for (const item of cart) {
+					const key = (item.parent ?? '').trim();
+					if (!groups.has(key)) groups.set(key, []);
+					groups.get(key).push(item);
+				}
 
-  // sort parents and items
-  const sortedParents = Array.from(groups.keys()).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
-  let html = '<div class="cart-groups">';
+				// sort parents and items
+				const sortedParents = Array.from(groups.keys()).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
+				let html = '<div class="cart-groups">';
 
-  for (const parent of sortedParents) {
-    const lines = groups.get(parent).slice()
-      .sort((a,b) => a.part.localeCompare(b.part, undefined, {numeric:true}));
+				for (const parent of sortedParents) {
+					const lines = groups.get(parent).slice()
+					.sort((a,b) => a.part.localeCompare(b.part, undefined, {numeric:true}));
 
-    html += `
-      <div class="cart-parent">
-        <div class="cart-parent__title">${parent || '(no parent)'}</div>
-        <ul class="cart-lines">
-          ${lines.map(i => `
-            <li class="cart-line">
-              <span class="cart-line__part">${i.part}</span>
-              <span class="cart-line__desc">${i.desc}</span>
-              <span class="cart-line__qty">${i.qty}</span>
-			  <button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
-            </li>
-          `).join('')}
-        </ul>
-      </div>`;
-  }
+					html += `
+					<div class="cart-parent">
+						<div class="cart-parent__title">${parent || '(no parent)'}</div>
+						<ul class="cart-lines">
+						${lines.map(i => `
+							<li class="cart-line">
+							<span class="cart-line__part">${i.part}</span>
+							<span class="cart-line__desc">${i.desc}</span>
+							<span class="cart-line__qty">${i.qty}</span>
+							<button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
+							</li>
+						`).join('')}
+						</ul>
+					</div>`;
+				}
 
-  html += '</div>';
-  el.innerHTML = html;
-}
+				html += '</div>';
+				el.innerHTML = html;
+			}
 
-// helpers (safe for HTML/attributes)
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-function escapeAttr(s) {
-  return String(s).replace(/["'\\]/g, m => ({'"':'&quot;', "'":'&#39;', '\\':'\\\\'}[m]));
-}
+			// helpers (safe for HTML/attributes)
+			function escapeHtml(s) {
+				return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+			}
+			function escapeAttr(s) {
+				return String(s).replace(/["'\\]/g, m => ({'"':'&quot;', "'":'&#39;', '\\':'\\\\'}[m]));
+			}
 			
 
 			function removeCartItem(part, parent) {
-  const key = `${part}::${parent || ''}`;
-  const idx = cart.findIndex(i => `${i.part}::${i.parent || ''}` === key);
-  if (idx !== -1) {
-    cart.splice(idx, 1);
-    saveCart();
-    renderCart();
-  }
-}
+				const key = `${part}::${parent || ''}`;
+				const idx = cart.findIndex(i => `${i.part}::${i.parent || ''}` === key);
+				if (idx !== -1) {
+					cart.splice(idx, 1);
+					saveCart();
+					renderCart();
+				}
+			}
 
 			
 			
-function table_to_cart() {
-  const rows = document.querySelectorAll('#tableOut table tbody tr');
-  const parent = currentParentBaseFromObject();   // <- compute once
+			function table_to_cart() {
+				const rows = document.querySelectorAll('#tableOut table tbody tr');
+				const parent = currentParentBaseFromObject();
 
-  rows.forEach(tr => {
-    const cells = tr.querySelectorAll('td');
-    const qtyInput = tr.querySelector('input');
-    if (!qtyInput) return;
+				rows.forEach(tr => {
+					const cells = tr.querySelectorAll('td');
+					const qtyInput = tr.querySelector('input');
+					if (!qtyInput) return;
 
-    const qty = parseInt(qtyInput.value, 10) || 0;
-    if (qty <= 0) return;
+					const qty = parseInt(qtyInput.value, 10) || 0;
+					if (qty <= 0) return;
 
-    const item = {
-      part:   (cells[1]?.textContent || '').trim(), // PART NUMBER
-      desc:   (cells[2]?.textContent || '').trim(), // DESCRIPTION
-      parent,                                        // <- from current SVG
-      qty
-    };
+					const item = {
+					part:   (cells[1]?.textContent || '').trim(), // PART NUMBER
+					desc:   (cells[2]?.textContent || '').trim(), // DESCRIPTION
+					parent,                                       // <- from current SVG
+					qty
+					};
 
-    // Dedup by part+parent
-    const key = `${item.part}::${item.parent}`;
-    const existing = cart.find(i => `${i.part}::${i.parent}` === key);
-    if (existing) existing.qty += qty;
-    else cart.push(item);
-  });
+					const key = `${item.part}::${item.parent}`;
+					const existing = cart.find(i => `${i.part}::${i.parent}` === key);
+					if (existing) existing.qty += qty;
+					else cart.push(item);
+				});
 
-  saveCart();
-  renderCart();
-}
+				saveCart();
+				renderCart();
+			}
 
 
 			// extract the rows from the cart for odoo to be able to access the cart data
 			function readCartFromTable() {
-  const table = document.getElementById("cartTable");
-  if (!table) return [];
-  const rows = [];
-  table.querySelectorAll("tbody tr").forEach(tr => {
-    const tds = tr.querySelectorAll("td");
-    if (tds.length >= 4) {
-      rows.push({
-        part:        tds[0].textContent.trim(),
-        description: tds[1].textContent.trim(),
-        parent:      tds[2].textContent.trim(),
-        qty:         parseInt(tds[3].textContent.trim(), 10) || 0
-      });
-    }
-  });
-  return rows;
-}
+				const table = document.getElementById("cartTable");
+				if (!table) return [];
+				const rows = [];
+				table.querySelectorAll("tbody tr").forEach(tr => {
+					const tds = tr.querySelectorAll("td");
+					if (tds.length >= 4) {
+						rows.push({
+							part:        tds[0].textContent.trim(),
+							description: tds[1].textContent.trim(),
+							parent:      tds[2].textContent.trim(),
+							qty:         parseInt(tds[3].textContent.trim(), 10) || 0
+						});
+					}
+				});
+				return rows;
+			}
 
 			
-			// Listen for parent requests
+			// Listen for parent requests. Allows Odoo to get the cart stored in Github, and also clear the cart info from Githubs storage
 			window.addEventListener("message", e => {
 				if (e.data && e.data.type === "REQUEST_CART_ROWS") {
 					const rows = readCartFromTable();
 					e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
 			  	}
-
 				if (data.type === "CLEAR_CART") {
-    try {
-      localStorage.removeItem("cart");       // clear storage
-      // (optional) re-render the cart UI on the child so it shows "empty"
-      if (typeof renderCart === "function") renderCart();
-    } finally {
-      e.source.postMessage({ type: "CART_CLEARED" }, e.origin);
-    }
-  }
+					try {
+						localStorage.removeItem("cart");       // clear storage
+						
+						// re-render the cart UI on the child so it shows "empty"
+						if (typeof renderCart === "function") renderCart();
+					} finally {
+						e.source.postMessage({ type: "CART_CLEARED" }, e.origin);
+					}
+				}
 			});
 	  </script>
 	</body>
 </html>
-
-
-
-
-
-
