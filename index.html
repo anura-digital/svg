@@ -227,7 +227,6 @@
 				const rows = document.querySelectorAll('#tableOut table tbody tr');
 				rows.forEach(tr => {
 					const cells = tr.querySelectorAll('td');
-					console.log(cells);								// have added to see what parent is picked up as
 					const qtyInput = tr.querySelector('input');
 					if (!qtyInput) return;
 					const qty = parseInt(qtyInput.value, 10);
@@ -260,8 +259,8 @@
 					const tds = tr.querySelectorAll("td");
 					console.log(tds);							// added to see where/if parent shows up
 					if (tds.length >= 3) {
-						const qtyInput = tds[2].querySelector("input");
-						const qtyText = qtyInput ? qtyInput.value : tds[2].textContent;
+						const qtyInput = tds[3].querySelector("input");
+						const qtyText = qtyInput ? qtyInput.value : tds[3].textContent;
 						rows.push({
 							part: tds[0].textContent.trim(),
 							description: tds[1].textContent.trim(),
@@ -283,6 +282,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
