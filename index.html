@@ -89,9 +89,6 @@
 					</div>
 				</div>
 			</div>
-			
-
-			
 	  	</div>
 
 
@@ -129,7 +126,7 @@
 			}
 		</script>
 		
-		<!-- script to reproduce SVG table as a 'shopping form' to order parts -->
+		<!-- script to replace current SVG and to reproduce SVG table as a 'shopping form' to order parts -->
 	   	<script>
 			const obj = document.getElementById('svgObj');
 			const out = document.getElementById('tableOut');
@@ -150,6 +147,16 @@
 				}
 			});
 
+			function currentParentBase() {
+				try {
+			      // Resolve to a proper URL, then take the filename
+			      const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
+			      // Strip ".svg"
+			      return file.replace(/\.svg$/i, ''); // e.g. "2-000-800-A.svg" -> "2-000-800"
+			    } catch {
+			      return '';
+			    }
+			}
 			// extract each rows information useing the Line#
 			function handleSvgDoc(svgDoc) {
 				// Collect rows: all groups whose id starts with "Line"
@@ -178,7 +185,7 @@
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
-					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
+					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') +  `<td>${escapeHtml(parentBase)}</td>` + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
 				}
 				html += '</tbody></table>';
 			
@@ -272,3 +279,4 @@
 	  </script>
 	</body>
 </html>
+
