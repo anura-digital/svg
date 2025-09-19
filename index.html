@@ -359,10 +359,21 @@ function table_to_cart() {
 					const rows = readCartFromTable();
 					e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
 			  	}
+
+				if (data.type === "CLEAR_CART") {
+    try {
+      localStorage.removeItem("cart");       // clear storage
+      // (optional) re-render the cart UI on the child so it shows "empty"
+      if (typeof renderCart === "function") renderCart();
+    } finally {
+      e.source.postMessage({ type: "CART_CLEARED" }, e.origin);
+    }
+  }
 			});
 	  </script>
 	</body>
 </html>
+
 
 
 
