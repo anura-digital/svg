@@ -19,29 +19,34 @@
 			  justify-content: flex-start; /* align items side by side */
 			  gap: 20px;                   /* spacing between svg and order/cart column */
 			}
+
+			#svgObj {
+			  flex: 2;              /* don’t let svg shrink */
+			  max-width: 60%;              /* keep svg from being too big */
+				height:auto;
+				flex-shrink: 1;
+			}
 			
 			#flex-order-container {
 			  display: flex;
 			  flex-direction: column;      /* stack order form (and button) and cart vertically */
 			  gap: 20px;                   /* spacing between table and cart */
 			  flex: 1;                     /* DONT allow this to grow */
-			  max-width: 50%;
+			  max-width: 40%;
 			}
 
 			#tableOut,
 			#cart-container {
 			  width: 100%;                 /* form table and cart full width */
 			  box-sizing: border-box;      /* so padding/border don't break alignment */
+				flex-shrink: 2;
 			}
 			
 			#btnAddToCart {
 			  margin-top: 10px;            /* little space between button and order form */
 			}
 
-			#svgObj {
-			  flex: 0 0 auto;              /* don’t let svg shrink */
-			  max-width: 60%;              /* keep svg from being too big */
-			}
+			
 		</style>
 	</head>
 	
@@ -254,6 +259,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
