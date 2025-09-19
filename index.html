@@ -21,18 +21,18 @@
 			}
 
 			#svgObj {
-			  flex: 2;              /* don’t let svg shrink */
-			  max-width: 60%;              /* keep svg from being too big */
+			  flex: 2;              /* take up more space than order form and cart*/
+			  max-width: 60%;       /* keep svg from being too big */
 			  height:auto;
-			  flex-shrink: 1;
-			  flex-grow: 2;
+			  flex-shrink: 1;		/* shrinks slower than order form*/
+			  flex-grow: 2;			/* grows faster than order form */
 			}
 			
 			#flex-order-container {
 			  display: flex;
 			  flex-direction: column;      /* stack order form (and button) and cart vertically */
 			  gap: 20px;                   /* spacing between table and cart */
-			  flex: 1;                     /* DONT allow this to grow */
+			  flex: 1;                     
 			  max-width: 40%;
 			}
 
@@ -40,8 +40,8 @@
 			#cart-container {
 			  width: 100%;                 /* form table and cart full width */
 			  box-sizing: border-box;      /* so padding/border don't break alignment */
-			  flex-shrink: 2;
-			  flex-grow: 1;
+			  flex-shrink: 2;			   /* shrinks faster than order form*/
+			  flex-grow: 1;				  /* grows faster than order form */
 			}
 			
 			button {
@@ -182,7 +182,7 @@
 			
 				let html = '<table>';
 			
-				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>'
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>PARENT PART</th><th>ORDER QTY</th></tr></thead>'
 				html += '<tbody>';
 				for (const r of rows) {
 					html += '<tr>' + r.map(c => `<td>${escapeHtml(c)}</td>`).join('') +  `<td>${escapeHtml(parentBase)}</td>` + '<td><input type="number" step="1" min="0" size="10"/></td>' + '</tr>';
@@ -213,9 +213,9 @@
 					document.getElementById('cart').innerHTML = "<p>Cart is empty.</p>";
 					return;
 				}
-				let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>Qty</th></tr>';
+				let html = '<h3>Shopping Cart</h3><table id="cartTable"><tr><th>Part Number</th><th>Description</th><th>PARENT PART</th><th>Qty</th></tr>';
 				for (const item of cart) {
-					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.qty}</td></tr>`;
+					html += `<tr><td>${item.part}</td><td>${item.desc}</td><td>${item.parent}</td><td>${item.qty}</td></tr>`;
 				}
 				html += '</table>';
 				document.getElementById('cart').innerHTML = html;
@@ -234,6 +234,7 @@
 						const item = {
 							part: cells[1].textContent,   // 2nd column = Part Number
 							desc: cells[2].textContent,   // 3rd column = Description
+							parent: celss[3].textContent,
 							qty
 						};
 						// If already in cart, update qty
@@ -279,5 +280,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
