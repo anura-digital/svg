@@ -159,8 +159,9 @@
 		<script>
 			function getStorage() {
 				var cart = getItem('cart');
-				var text = getElementById("testing");
-				text.innerHTML = cart;
+				const showCart = getElementById("testing");
+				console.log(cart);
+				showCart.innerHTML = cart;
 			}
 		</script>
 
@@ -304,7 +305,7 @@
 					el.innerHTML = "<p>Cart is empty.</p>"; return; 
 				}
 
-				// Group by parent ("" -> "(no parent)")
+				// Group by parent
 				const groups = new Map();
 				for (const item of cart) {
 					const key = (item.parent ?? '').trim();
@@ -431,6 +432,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
