@@ -162,7 +162,7 @@
 		</script>
 
 					
-		<!----------------------------- script for checking JSON file and providing links to each part ----------------------------->
+		<!----------------------------- get SN's files from JSON and provide links to each part ----------------------------->
 		<script>
 			async function isValidSn() 
 			{
@@ -288,6 +288,7 @@
 				try {
 					const obj = document.getElementById('svgObj');
 					const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
+					console.log("in currParentBaseFromObj the file name is ${file}");
 					
 					return file.replace(/\.svg$/i, '');		// strip ".svg"
 				} catch {
@@ -439,5 +440,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
