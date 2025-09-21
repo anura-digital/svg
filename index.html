@@ -327,8 +327,8 @@
 								<span class="cart-line__part">${i.part}</span>
 								<span class="cart-line__desc">${i.desc}</span>
 								<span class="cart-line__qty">${i.qty}</span>
-		   						<button type="button" class="qty-btn" onclick="updateQty(-1)"> - </button>
-			  					<button type="button" class="qty-btn" onclick="updateQty(1)"> + </button>
+		   						<button type="button" class="qty-btn" onclick="updateQty(this, -1)"> - </button>
+			  					<button type="button" class="qty-btn" onclick="updateQty(this, 1)"> + </button>
 								<button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
 							</li>
 						`).join('')}
@@ -349,12 +349,34 @@
 			}
 
 			// update the cart quantities by +1 / -1
-			function updateQty(btn) {
+			function updateQty(btn, delta) {
 				
+				// find the parent <li> so can adjust the correct items quantity
+				const line = btn.closest(".cart-line");
+				if (!line) return;
+				
+				// find the qty column (which uses a <span>
+				const qtyEl = line.querySelector(".cart-line__qty");
+				if (!qtyEl) return;
+				
+				// get the items current qty and update its value by +1 or -1. Won't go below 0 as there is a delete button for this
+				let qty = parseInt(qtyEl.textContent, 10) || 0;
+				qty = Math.max(0, qty + delta);
+				
+				// update DOM
+				qtyEl.textContent = qty;
+				
+				// update localStorage using the part number as a key/index
+				const part = line.querySelector(".cart-line__part")?.textContent;
+				const parent = line.closest(".cart-parent")?.querySelector(".cart-parent__title")?.textContent;
+				
+				let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+				if (!cart[parent]) cart[parent] = {};
+				cart[parent][part] = qty;
+				localStorage.setItem("cart", JSON.stringify(cart));
 			}
 
 
-		
 			// delete an item from cart. Need to update the storage and re-render the cart to show update.
 			function removeCartItem(part, parent) {
 				const key = `${part}::${parent || ''}`;
@@ -396,16 +418,19 @@
 				renderCart();
 			}
 	  </script>
+
+	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
 		  window.addEventListener("message", (event) => {
 		    // can return if the parent is NOT the expected Odoo domain
 		    // if (event.origin !== "https://anuranz.odoo.com") return;
 		
 		    if (event.data && event.data.type === "GET_CART") {
-		      const cartStr = localStorage.getItem("cart"); 		// currently as a string (???)
+		      const cartStr = localStorage.getItem("cart");
 		      event.source.postMessage({ type: "CART_VALUE", cart: cartStr }, event.origin);
 		    }
 		  });
 	  </script>
 	</body>
 </html>
+
