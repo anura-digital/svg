@@ -350,30 +350,36 @@
 
 			// update the cart quantities by +1 / -1
 			function updateQty(btn, delta) {
-				
-				// find the parent <li> so can adjust the correct items quantity
+
+				// get the correct line/item to adjust quantities
 				const line = btn.closest(".cart-line");
 				if (!line) return;
+
+				// get the qty column (identify using the <span>)
+				const qtyCol = line.querySelector(".cart-line__qty");
+				if (!qtyCol) return;
 				
-				// find the qty column (which uses a <span>
-				const qtyEl = line.querySelector(".cart-line__qty");
-				if (!qtyEl) return;
-				
-				// get the items current qty and update its value by +1 or -1. Won't go below 0 as there is a delete button for this
-				let qty = parseInt(qtyEl.textContent, 10) || 0;
+				// adjust qty in DOM
+				let qty = parseInt(qtyCol.textContent, 10) || 0;
 				qty = Math.max(0, qty + delta);
+				qtyCol.textContent = qty;
 				
-				// update DOM
-				qtyEl.textContent = qty;
-				
-				// update localStorage using the part number as a key/index
+				// identify the item (by part + parent)
 				const part = line.querySelector(".cart-line__part")?.textContent;
-				const parent = line.closest(".cart-parent")?.querySelector(".cart-parent__title")?.textContent;
+				const parent = line.closest(".cart-parent")
+				   ?.querySelector(".cart-parent__title")?.textContent;
 				
-				let cart = JSON.parse(localStorage.getItem("cart") || "{}");
-				if (!cart[parent]) cart[parent] = {};
-				cart[parent][part] = qty;
-				localStorage.setItem("cart", JSON.stringify(cart));
+				// update cart array
+				let item = cart.find(i => i.part === part && i.parent === parent);
+				if (item) {
+				   item.qty = qty;
+				} else {
+				   // if not found add it (shouldnt happen, but safety check)
+				   cart.push({ part, parent, qty });
+				}
+				
+				// save
+				saveCart();
 			}
 
 
@@ -433,4 +439,5 @@
 	  </script>
 	</body>
 </html>
+
 
