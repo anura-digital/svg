@@ -147,12 +147,24 @@
 					</div>
 				</div>
 			</div>
+			<button onclick="getStorage()">testing storage retrieval</button>
+			<div id="test">
+				<p id="testing>LOCAL STORAGE SHOWS HERE</p>
+			</div>
 	  	</div>
 
 
 		
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
+		<script>
+			function getStorage() {
+				var cart = getItem('cart');
+				var text = getElementById("testing");
+				text.innerHTML = cart;
+			}
+		</script>
 
+					
 		<!-- script for checking JSON file and providing links to each part -->
 		<script>
 			async function isValidSn() 
@@ -419,5 +431,6 @@
 	  </script>
 	</body>
 </html>
+
 
 
