@@ -426,6 +426,9 @@
 					const existing = cart.find(i => `${i.part}::${i.parent}` === key);
 					if (existing) existing.qty += qty;
 					else cart.push(item);
+
+					// reset the qty to 0 of curr form (no persistency for other forms)
+					qtyInput = 0;
 				});
 
 				saveCart();
@@ -447,6 +450,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
