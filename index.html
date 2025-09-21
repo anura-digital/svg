@@ -144,6 +144,7 @@
 					</div>
 					<div id="cart-container">
 						<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
+						<button id="clear-button" onclick="clearCart()"> CLEAR CART </button>	
 					</div>
 				</div>
 			</div>
@@ -296,7 +297,7 @@
 				}
 			}
 
-			// 
+			// display the stored information in an HTML table
 			function renderCart() {
 				const el = document.getElementById('cart');
 				if (!cart.length) { 
@@ -395,6 +396,12 @@
 				}
 			}
 
+			function clearCart() {
+				cart = [];		// set cart to empty list, then save into local storage
+				saveCart();
+				renderCart();
+			}
+
 			// get all the SVG table information and reproduce as an HTML table
 			function table_to_cart() {
 				const rows = document.querySelectorAll('#tableOut table tbody tr');
@@ -440,6 +447,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
