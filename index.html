@@ -148,25 +148,21 @@
 				</div>
 			</div>
 			<button onclick="getStorage()">testing storage retrieval</button>
-			<div id="test">
-				<p id="testing">LOCAL STORAGE SHOWS HERE</p>
-			</div>
 	  	</div>
 
 
 		
 		<!------------------------------------------------ SCRIPTS ------------------------------------------------>
+		<!-- TESTING FUNCTION TO SHOW WHAT IS STORED IN THE LOCAL STORAGE -->
 		<script>
 			function getStorage() {
 				var cart = localStorage.getItem("cart");
-				const showCart = document.getElementById("testing");
 				console.log(cart);
-				showCart.innerHTML = cart;
 			}
 		</script>
 
 					
-		<!-- script for checking JSON file and providing links to each part -->
+		<!----------------------------- script for checking JSON file and providing links to each part ----------------------------->
 		<script>
 			async function isValidSn() 
 			{
@@ -197,7 +193,7 @@
 			}
 		</script>
 		
-		<!-- script to replace current SVG and to reproduce SVG table as a 'shopping form' to order parts -->
+		<!----------------------------- replace current SVG and reproduce SVG table as a 'shopping form' to order parts ----------------------------->
 	   	<script>
 			const obj = document.getElementById('svgObj');
 			const out = document.getElementById('tableOut');
@@ -243,7 +239,6 @@
 				}
 
   				let html = '<table>';
-
 				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
 				html += '<tbody>';
 				for (const r of rows) {
@@ -263,7 +258,7 @@
   				btn.style.display = "inline-block"; // button only showed when table/data has been rendered
 			}
 
-			// helper function to adjust qty input
+			// adjust the quantity of item by +1 / -1
 			function changeQty(btn, delta) {
 				const input = btn.parentElement.querySelector('input');
 				let val = parseInt(input.value, 10) || 0;
@@ -279,14 +274,16 @@
 		</script>
 
 
-		<!-- script to produce a cart which takes the items from the filled out form and saves them into local storage for persistency -->
+		<!----------------------------- produce cart with items from the order form, saves to local storage ----------------------------->
 		<script>
 			let cart = JSON.parse(localStorage.getItem('cart')) || [];
-			
+
+			// save the cart to local Storage
 			function saveCart() {
 			  	localStorage.setItem('cart', JSON.stringify(cart));
 			}
 
+			// for each 'sub part' extract the parent part using the filename. Helps identify what schematic an item comes from.
 			function currentParentBaseFromObject() {
 				try {
 					const obj = document.getElementById('svgObj');
@@ -298,14 +295,14 @@
 				}
 			}
 
-			
+			// 
 			function renderCart() {
 				const el = document.getElementById('cart');
 				if (!cart.length) { 
 					el.innerHTML = "<p>Cart is empty.</p>"; return; 
 				}
 
-				// Group by parent
+				// Group by parent part (puts all subparts together under a parent part)
 				const groups = new Map();
 				for (const item of cart) {
 					const key = (item.parent ?? '').trim();
@@ -327,10 +324,12 @@
 						<ul class="cart-lines">
 						${lines.map(i => `
 							<li class="cart-line">
-							<span class="cart-line__part">${i.part}</span>
-							<span class="cart-line__desc">${i.desc}</span>
-							<span class="cart-line__qty">${i.qty}</span>
-							<button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
+								<span class="cart-line__part">${i.part}</span>
+								<span class="cart-line__desc">${i.desc}</span>
+								<span class="cart-line__qty">${i.qty}</span>
+		   						<button type="button" class="qty-btn" onclick="updateQty(-1)"> - </button>
+			  					<button type="button" class="qty-btn" onclick="updateQty(1)"> + </button>
+								<button type="button" class="cart-remove" title="Remove" onclick="removeCartItem('${escapeAttr(i.part)}','${escapeAttr(i.parent ?? '')}')"> X </button>
 							</li>
 						`).join('')}
 						</ul>
@@ -348,8 +347,15 @@
 			function escapeAttr(s) {
 				return String(s).replace(/["'\\]/g, m => ({'"':'&quot;', "'":'&#39;', '\\':'\\\\'}[m]));
 			}
-			
 
+			// update the cart quantities by +1 / -1
+			function updateQty(btn) {
+				
+			}
+
+
+		
+			// delete an item from cart. Need to update the storage and re-render the cart to show update.
 			function removeCartItem(part, parent) {
 				const key = `${part}::${parent || ''}`;
 				const idx = cart.findIndex(i => `${i.part}::${i.parent || ''}` === key);
@@ -360,8 +366,7 @@
 				}
 			}
 
-			
-			
+			// get all the SVG table information and reproduce as an HTML table
 			function table_to_cart() {
 				const rows = document.querySelectorAll('#tableOut table tbody tr');
 				const parent = currentParentBaseFromObject();
@@ -390,52 +395,17 @@
 				saveCart();
 				renderCart();
 			}
-
-
-			// extract the rows from the cart for odoo to be able to access the cart data
-			function readCartFromTable() {
-				const table = document.getElementById("cartTable");
-				if (!table) return [];
-				const rows = [];
-				table.querySelectorAll("tbody tr").forEach(tr => {
-					const tds = tr.querySelectorAll("td");
-					if (tds.length >= 4) {
-						rows.push({
-							part:        tds[0].textContent.trim(),
-							description: tds[1].textContent.trim(),
-							parent:      tds[2].textContent.trim(),
-							qty:         parseInt(tds[3].textContent.trim(), 10) || 0
-						});
-					}
-				});
-				return rows;
-			}
-
-			
-			// Listen for parent requests. Allows Odoo to get the cart stored in Github, and also clear the cart info from Githubs storage
-			window.addEventListener("message", e => {
-				if (e.data && e.data.type === "REQUEST_CART_ROWS") {
-					const rows = readCartFromTable();
-					e.source.postMessage({ type: "CART_ROWS", rows }, e.origin);
-			  	}
-				if (data.type === "CLEAR_CART") {
-					try {
-						localStorage.removeItem("cart");       // clear storage
-						
-						// re-render the cart UI on the child so it shows "empty"
-						if (typeof renderCart === "function") renderCart();
-					} finally {
-						e.source.postMessage({ type: "CART_CLEARED" }, e.origin);
-					}
-				}
-			});
+	  </script>
+	  <script>
+		  window.addEventListener("message", (event) => {
+		    // can return if the parent is NOT the expected Odoo domain
+		    // if (event.origin !== "https://anuranz.odoo.com") return;
+		
+		    if (event.data && event.data.type === "GET_CART") {
+		      const cartStr = localStorage.getItem("cart"); 		// currently as a string (???)
+		      event.source.postMessage({ type: "CART_VALUE", cart: cartStr }, event.origin);
+		    }
+		  });
 	  </script>
 	</body>
 </html>
-
-
-
-
-
-
-
