@@ -401,7 +401,7 @@
 				const input = btn.parentElement.querySelector('input');
 				let val = parseInt(input.value, 10) || 0;
 				val += delta;
-				if (val < 0) val = 0;
+				if (val < 1) val = 1;	// prevents user from entering a 0 qty. should be deleting the item from cart if want 0. -- FURTHER TESTING REQ
 				input.value = val;
 			}
 
@@ -598,6 +598,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
