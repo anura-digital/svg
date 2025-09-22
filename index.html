@@ -419,6 +419,13 @@
 			// save the cart to local Storage
 			function saveCart() {
 			  	localStorage.setItem('cart', JSON.stringify(cart));
+
+				if (window.parent) {
+				    window.parent.postMessage(
+				      { type: "CART_UPDATED", cart: JSON.stringify(cart) },
+				      "https://sparepartstest.odoo.com/" 						// USING TEST SITE FOR NOW !!!!!!!!!!!!!!!
+				    );
+				  }
 			}
 
 			// for each 'sub part' extract the parent part using the filename. Helps identify what schematic an item comes from.
@@ -640,6 +647,7 @@
 
 	</body>
 </html>
+
 
 
 
