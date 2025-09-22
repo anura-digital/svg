@@ -604,105 +604,53 @@
 
 	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
-		  (function () {
-		    const PARENT_ORIGIN = "*"; // or set to your Odoo origin for stricter security
-		
-		    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-		
-		    function saveCart() {
-		      localStorage.setItem("cart", JSON.stringify(cart));
-		      // notify parent that cart changed
-		      if (window.parent) {
-		        window.parent.postMessage(
-		          { type: "CART_UPDATED", cart: JSON.stringify(cart) },
-		          PARENT_ORIGIN
-		        );
-		      }
-		    }
-		
-		    // Example: whenever your iframe UI changes the cart, call saveCart()
-		    // e.g., addToCart(...); changeQty(...); removeItem(...); -> saveCart();
-		
-		    window.addEventListener("message", (event) => {
-		      // optionally check: if (event.origin !== "https://YOUR-ODOO-DOMAIN") return;
-		
-		      const data = event.data || {};
-		      if (data.type === "GET_CART") {
-		        // reply with current cart
-		        event.source?.postMessage(
-		          { type: "CART_VALUE", cart: JSON.stringify(cart) },
-		          event.origin
-		        );
-		      } else if (data.type === "SET_CART") {
-		        try {
-		          cart = data.cart ? JSON.parse(data.cart) : [];
-		        } catch {
-		          cart = [];
-		        }
-		        saveCart(); // persist and broadcast
-		      }
-		    });
-		  })();
-	</script>
+(function () {
+  // CHANGE THIS to your Odoo site origin exactly (protocol + domain [+ port])
+  const PARENT_ORIGIN = "https://YOUR-ODOO-DOMAIN";
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  function send(type) {
+    if (window.parent) {
+      window.parent.postMessage({ type, cart: JSON.stringify(cart) }, PARENT_ORIGIN);
+    }
+  }
+
+  function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    send("CART_UPDATED");
+  }
+
+  // Call saveCart() in your add/remove/qty code paths
+  // e.g. after modifying `cart`, call saveCart();
+
+  // Optional safety net: auto-broadcast whenever someone sets 'cart' in localStorage
+  const _setItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function (k, v) {
+    _setItem(k, v);
+    if (k === "cart") {
+      try { cart = JSON.parse(v || "[]"); } catch { cart = []; }
+      send("CART_UPDATED");
+    }
+  };
+
+  // Answer parent requests
+  window.addEventListener("message", (event) => {
+    if (event.origin !== PARENT_ORIGIN) return;
+    const data = event.data || {};
+    if (data.type === "GET_CART") {
+      event.source?.postMessage({ type: "CART_VALUE", cart: JSON.stringify(cart) }, event.origin);
+    } else if (data.type === "SET_CART") {
+      try { cart = data.cart ? JSON.parse(data.cart) : []; } catch { cart = []; }
+      saveCart();
+    }
+  });
+
+  // Optional: let parent know you’re ready
+  send("IFRAME_READY");
+})();
+</script>
+
 
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
