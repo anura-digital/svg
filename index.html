@@ -168,7 +168,7 @@
 			}
 
 			/* styling for the popup cart modal */
-			#modal {
+			.modal {
 			  display: none; /* Hidden by default */
 			  position: fixed; /* Stay in place */
 			  z-index: 1; /* Sit on top */
@@ -215,19 +215,18 @@
 
 			<!-- Button to show the cart popup -->
 			<button id="open-cart">CLICK TO OPEN CART</button>
-			
+
+			<!-- shows the file links -->
 			<div id="result" class="menu">
 				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
 			</div>
 
 			<div id="flex-main-container">
-				<!-- Display an initial SVG -->
 				<object id= "svgObj" type="image/svg+xml">THIS IS WHERE THE SVG WILL APPEAR</object>
 
-				
 				<div id="flex-order-container"> 
 					<!-- Pop up modal to show the cart, rather than being below the order form -->
-					<div id="modal">
+					<div id="myModal" class="modal">
 						<span id="close"> X </span>
 						<div id="modal-cart-container">
 							<div id="modal-cart"></div>
@@ -654,6 +653,7 @@
 
 	</body>
 </html>
+
 
 
 
