@@ -281,11 +281,13 @@
 			// When the user clicks on the button, open the modal
 			btn.onclick = function() {
 			  modal.style.display = "block";
+				span.style.display = "inline";
 			}
 			
 			// When the user clicks on <span> (x), close the modal
 			span.onclick = function() {
 			  modal.style.display = "none";
+			  span.style.display = "inline";
 			}
 			
 			// When the user clicks anywhere outside of the modal, close it
@@ -651,6 +653,7 @@
 
 	</body>
 </html>
+
 
 
 
