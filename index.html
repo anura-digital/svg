@@ -213,7 +213,7 @@
 			<button onclick="isValidSn()">Search</button>
 
 			<!-- Button to show the cart popup -->
-			<button id="open-cart" style="display: block;">CLICK TO OPEN CART</button>
+			<button id="open-cart">CLICK TO OPEN CART</button>
 			
 			<div id="result" class="menu">
 				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
@@ -227,7 +227,7 @@
 				<div id="flex-order-container"> 
 					<!-- Pop up modal to show the cart, rather than being below the order form -->
 					<div id="modal">
-						<span id="close"> &times; </span>
+						<span id="close" style="display: block;"> X </span>
 						<div id="modal-cart-container">
 							<div id="modal-cart"></div>
 							<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
@@ -653,6 +653,7 @@
 
 	</body>
 </html>
+
 
 
 
