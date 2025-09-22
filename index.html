@@ -401,7 +401,7 @@
 				const input = btn.parentElement.querySelector('input');
 				let val = parseInt(input.value, 10) || 0;
 				val += delta;
-				if (val < 1) val = 1;	// prevents user from entering a 0 qty. should be deleting the item from cart if want 0. -- FURTHER TESTING REQ
+				if (val < 0) val = 0;	// prevents user from entering a 0 qty in the order form
 				input.value = val;
 			}
 
@@ -520,7 +520,7 @@
 				
 				// adjust qty in DOM
 				let qty = parseInt(qtyCol.textContent, 10) || 0;
-				qty = Math.max(0, qty + delta);
+				qty = Math.max(1, qty + delta);						// changed to a 1 as dont want user to have a 0 qty in the cart (???) - should use the remove item button
 				qtyCol.textContent = qty;
 				
 				// identify the item (by part + parent)
@@ -608,6 +608,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
