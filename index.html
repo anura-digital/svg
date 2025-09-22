@@ -446,9 +446,18 @@
 			function renderCart() {
 				const el = document.getElementById('cart');
 				const cartModal = document.getElementById('modal-cart');
+
+				if (!el || !cartModal) return; // added for sync between two different carts
+
+				
 				if (!cart.length) { 
-					el.innerHTML = "<p>Cart is empty.</p>"; return; 
-					cartModal.innerHTML = "<p>Modal cart is empty</p>"; return;
+					//el.innerHTML = "<p>Cart is empty.</p>"; return; 
+					//cartModal.innerHTML = "<p>Modal cart is empty</p>"; return;
+					const emptyHtml = "<p>Cart is empty.</p>";
+				    el.innerHTML = emptyHtml;
+				    cartModal.innerHTML = emptyHtml;               // update modal too
+				    if (clearBtn) clearBtn.style.display = 'none'; // hide clear when empty
+				    return;
 				}
 
 				// Group by parent part (puts all subparts together under a parent part)
@@ -599,6 +608,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
