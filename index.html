@@ -216,21 +216,23 @@
 				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
 			</div>
 
+			<!-- Button to show the cart popup -->
+			<button id="open-cart">CLICK TO OPEN CART</button>
+
 			<div id="flex-main-container">
 				<!-- Display an initial SVG -->
 				<object id= "svgObj" type="image/svg+xml">THIS IS WHERE THE SVG WILL APPEAR</object>
 
-				<!-- Pop up modal to show the cart, rather than being below the order form -->
-				<div id="modal">
-					<span id="close"> &times; </span>
-					<div id="modal-cart-container">
-						<button id="open-cart">CLICK TO OPEN CART</button>
-						<div id="modal-cart"></div>
-						<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
-					</div>
-				</div>
 				
 				<div id="flex-order-container"> 
+					<!-- Pop up modal to show the cart, rather than being below the order form -->
+					<div id="modal">
+						<span id="close"> &times; </span>
+						<div id="modal-cart-container">
+							<div id="modal-cart"></div>
+							<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
+						</div>
+					</div>
 					
 					<!-- output for the 'ordering' table' -->
 					<div id="order-form-container">
@@ -590,6 +592,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
