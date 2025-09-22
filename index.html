@@ -187,11 +187,14 @@
 			  padding: 20px;
 			  border: 1px solid #888;
 			  width: 80%; /* Could be more or less, depending on screen size */
+			  position: relative;
 			}
 
 			#close {
+			  position: absolute;
+			  top: 10px;
+		      right: 15px;
 			  color: #aaa;
-			  float: right;
 			  font-size: 28px;
 			  font-weight: bold;
 			}
@@ -227,7 +230,7 @@
 				<div id="flex-order-container"> 
 					<!-- Pop up modal to show the cart, rather than being below the order form -->
 					<div id="modal">
-						<span id="close" style="display: block;"> X </span>
+						<span id="close"> X </span>
 						<div id="modal-cart-container">
 							<div id="modal-cart"></div>
 							<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
@@ -653,6 +656,7 @@
 
 	</body>
 </html>
+
 
 
 
