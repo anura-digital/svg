@@ -166,6 +166,42 @@
 			.file-tree:first-of-type {
 			  margin-left: 0;
 			}
+
+			/* styling for the popup cart modal */
+			#modal {
+			  display: none; /* Hidden by default */
+			  position: fixed; /* Stay in place */
+			  z-index: 1; /* Sit on top */
+			  left: 0;
+			  top: 0;
+			  width: 100%; /* Full width */
+			  height: 100%; /* Full height */
+			  overflow: auto; /* Enable scroll if needed */
+			  background-color: rgb(0,0,0); /* Fallback color */
+			  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+			}
+
+			#cart-container {
+			  background-color: #fefefe;
+			  margin: 15% auto; /* 15% from the top and centered */
+			  padding: 20px;
+			  border: 1px solid #888;
+			  width: 80%; /* Could be more or less, depending on screen size */
+			}
+
+			#close {
+			  color: #aaa;
+			  float: right;
+			  font-size: 28px;
+			  font-weight: bold;
+			}
+			
+			#close:hover,
+			#close:focus {
+			  color: black;
+			  text-decoration: none;
+			  cursor: pointer;
+			}
 		</style>
 	</head>
 	
@@ -186,18 +222,22 @@
 
 				<div id="flex-order-container"> 
 					<!-- Pop up modal to show the cart, rather than being below the order form -->
-					<div id="class-modal">
-						<span class="close"> X </span>
+					<div id="modal">
+						<span id="close"> &times; </span>
 						<div id="cart-container">
-						<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
-						<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
+							<p>THIS IS WHERE THE CART WILL APPEAR</p>
+							<div id="cart"></div>
+							<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
+						</div>
 					</div>
-					</div>
+					
 					<!-- output for the 'ordering' table' -->
 					<div id="order-form-container">
 						<div id="tableOut"></div>
 						<button id="btnAddToCart" onclick="table_to_cart()" style="display: none;">Add items to cart</button>
 					</div>
+					
+					<!-- output for the first version of cart -->
 					<div id="cart-container">
 						<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
 						<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
@@ -517,6 +557,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
