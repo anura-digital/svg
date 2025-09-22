@@ -152,7 +152,7 @@
 					</div>
 					<div id="cart-container">
 						<div id="cart"><p>THIS IS WHERE THE CART WILL APPEAR</p></div>
-						<button id="clear-button" onclick="clearCart()"> CLEAR CART </button>	
+						<button id="clear-button" onclick="clearCart()" style="display: none;"> CLEAR CART </button>	
 					</div>
 				</div>
 			</div>
@@ -242,8 +242,10 @@
 			function renderTable(rows) {
 				const out = document.getElementById("tableOut");
 				const btn = document.getElementById("btnAddToCart");
+				const clearbtn = document.getElementById("clear-button");
 				if (!rows.length) {
-					btn.style.display = "none";  // if no table then dont show button
+					btn.style.display = "none";  // if no table then dont show buttons
+					clear-button.style.display ="none";
 					return;
 				}
 
@@ -264,7 +266,8 @@
 				}
 				html += '</tbody></table>';
 				out.innerHTML = html;
-  				btn.style.display = "inline-block"; // button only showed when table/data has been rendered
+  				btn.style.display = "inline-block"; 	// buttons only showed when table/data has been rendered
+				clearbtn.style.display = "inline-block";
 			}
 
 			// adjust the quantity of item by +1 / -1
@@ -311,17 +314,6 @@
 					console.log("running the catch block");
 					return '';
 				}
-				
-				
-				//try {
-				//	const obj = document.getElementById('svgObj');
-				//	const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
-				//	console.log(`in currParentBaseFromObj the file name is ${file}`);
-					
-				//	return file.replace(/\.svg$/i, '');		// strip ".svg"
-				//} catch {
-				//	return '';
-				//}
 			}
 
 			// display the stored information in an HTML table
@@ -477,6 +469,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
