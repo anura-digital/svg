@@ -64,6 +64,21 @@
 			#tableOut td:last-child {
 				border-right: none;
 			}
+
+			#tableOut td:nth-child(2), 
+			#tableOut th:nth-child(2) {
+			  width: 150px;  			/* PART NUMBER column */
+			}
+			
+			#tableOut td:nth-child(3), 
+			#tableOut th:nth-child(3) {
+			  width: 300px;  			/* DESCRIPTION column */
+			}
+			
+			#tableOut td:nth-child(5), 
+			#tableOut th:nth-child(5) {
+			  width: 180px;  			/* ORDER QTY column */
+			}
 			
 			
 			button {
@@ -272,7 +287,7 @@
 				}
 
   				let html = '<table>';
-				html += '<thead><tr><th>ITEM NO.</th><th>PART NUMBER</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
+				html += '<thead><tr><th>ITEM NO.</th><th>PART NO.</th><th>DESCRIPTION</th><th>QTY</th><th>ORDER QTY</th></tr></thead>';
 				html += '<tbody>';
 				for (const r of rows) {
 					html += '<tr>'
@@ -491,6 +506,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
