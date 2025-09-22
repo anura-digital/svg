@@ -287,9 +287,11 @@
 			// for each 'sub part' extract the parent part using the filename. Helps identify what schematic an item comes from.
 			function currentParentBaseFromObject() {
 				const obj = document.getElementById('svgObj');
-				console.log(obj.contentDocument.URL);
+				console.log("running Parent finding func");
+				
 				try {
 					const url = obj.contentDocument.URL;
+					console.log(url);
 					const filename = url.split("/").pop();
 					
 					// Remove the ".svg" from the filename
@@ -298,6 +300,7 @@
 					}
 					return filename;
 				} catch { 
+					console.log("running the catch block");
 					return '';
 				}
 				
@@ -466,6 +469,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
