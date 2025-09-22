@@ -291,12 +291,14 @@
 				
 				try {
 					const url = obj.contentDocument.URL;
-					console.log(url);
 					const filename = url.split("/").pop();
+					console.log(filename);
 					
 					// Remove the ".svg" from the filename
 					if (filename.toLowerCase().endsWith(".svg")) {
+						  console.log("trying to strip the .svg part of file. the update filename is: ");
 						  filename = filename.slice(0, -4);
+						  console.log(filename);
 					}
 					return filename;
 				} catch { 
@@ -469,6 +471,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
