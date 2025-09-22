@@ -120,11 +120,11 @@
 			}
 
 			/* indent all but the first link in file tree (creates a 'parent file with sub files' look) */
-			.file-list .file-tree:first-child {
-			  margin-left: 0;
-			}
-			.file-list .file-tree:not(:first-child) {
+			.file-tree {
 			  margin-left: 20px;
+			}
+			.file-tree:first-of-type {
+			  margin-left: 0;
 			}
 		</style>
 	</head>
@@ -186,9 +186,7 @@
 			
 			        // Function to build links
 			        const buildLinks = (files) => 
-			          	`<div class="file-list">` +
-						files.map(file => `<div class="file-tree"><a href="${file}" target="_blank">${file}</a></div>`).join("") +
-						`</div>`;
+						files.map(file => `<div class="file-tree"><a href="${file}" target="_blank">${file}</a></div>`).join("");
 					
 					// Look for a system with a matching SN
     				const match = data.systems.find(system => system.sn === enteredSn);
@@ -479,6 +477,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
