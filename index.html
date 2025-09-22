@@ -286,15 +286,32 @@
 
 			// for each 'sub part' extract the parent part using the filename. Helps identify what schematic an item comes from.
 			function currentParentBaseFromObject() {
-				try {
-					const obj = document.getElementById('svgObj');
-					const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
-					console.log(`in currParentBaseFromObj the file name is ${file}`);
+				const obj = document.getElementById('svgObj');
+				obj.addEventListener("load", () => {
+					try {
+						const url = obj.contentDocument.URL;
+						const filename = url.split("/").pop();
+						
+						// Remove the ".svg" from the filename
+					    if (filename.toLowerCase().endsWith(".svg")) {
+						      filename = filename.slice(0, -4);
+					    }
+						return filename;
+					} catch { 
+						return '';
+					}
+				});
+				
+				
+				//try {
+				//	const obj = document.getElementById('svgObj');
+				//	const file = new URL(obj.data, window.location.href).pathname.split('/').pop();
+				//	console.log(`in currParentBaseFromObj the file name is ${file}`);
 					
-					return file.replace(/\.svg$/i, '');		// strip ".svg"
-				} catch {
-					return '';
-				}
+				//	return file.replace(/\.svg$/i, '');		// strip ".svg"
+				//} catch {
+				//	return '';
+				//}
 			}
 
 			// display the stored information in an HTML table
@@ -450,6 +467,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
