@@ -261,6 +261,12 @@
 			}
 		</script>
 
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+			  renderCart();
+			});
+		</script>
+
 		<!-- cart popup functionality - TESTING -->
 		<script>
 			// Get the modal
@@ -544,7 +550,7 @@
 				renderCart();
 			}
 
-			// get all the SVG table information and reproduce as an HTML table
+			// extract all the items from the order form that have a qty > 0
 			function table_to_cart() {
 				const rows = document.querySelectorAll('#tableOut table tbody tr');
 				const parent = currentParentBaseFromObject();
@@ -592,6 +598,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
