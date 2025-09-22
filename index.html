@@ -43,6 +43,21 @@
 				flex-shrink: 2;			   /* shrinks faster than order form*/
 				flex-grow: 1;			   /* grows faster than order form */
 			}
+
+			/* light blue grid, column size adjust, no left or right borders on first and last column */
+			#tableOut th,
+			#tableOut td {
+				border: 1px solid #00205b;
+			}
+			#tableOut th:first-child,
+			#tableOut td:first-child {
+				border-left: none;
+			}
+			#tableOut th:last-child,
+			#tableOut td:last-child {
+				border-right: none;
+			}
+			
 			
 			button {
 				font-family: "Rogan Regular";
@@ -469,6 +484,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
