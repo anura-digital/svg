@@ -597,18 +597,6 @@
 
 	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
-		  window.addEventListener("message", (event) => {
-		    // can return if the parent is NOT the expected Odoo domain
-		    // if (event.origin !== "https://anuranz.odoo.com") return;
-		
-		    if (event.data && event.data.type === "GET_CART") {
-		      const cartStr = localStorage.getItem("cart");
-		      event.source.postMessage({ type: "CART_VALUE", cart: cartStr }, event.origin);
-		    }
-		  });
-	  </script>
-
-	  <script>
 		  (function () {
 		    const PARENT_ORIGIN = "*"; // or set to your Odoo origin for stricter security
 		
@@ -652,6 +640,7 @@
 
 	</body>
 </html>
+
 
 
 
