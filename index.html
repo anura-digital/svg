@@ -45,12 +45,17 @@
 			}
 
 			/* light blue grid, column size adjust, no left or right borders on first and last column */
+			#tableOut table {
+				border-collapse: collapse;
+				border-spacing: 0;
+				width: 100%;
+			}
+
 			#tableOut th,
 			#tableOut td {
 				border: 1px solid #00205b;
 				padding: 0;
 				margin: 0;
-				box-sizing: content-box;
 			}
 			#tableOut th:first-child,
 			#tableOut td:first-child {
@@ -487,6 +492,7 @@
 	  </script>
 	</body>
 </html>
+
 
 
 
