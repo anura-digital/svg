@@ -211,13 +211,13 @@
 			<label for="sn-input">SN:</label>
 			<input type="text" id="sn-input" />
 			<button onclick="isValidSn()">Search</button>
+
+			<!-- Button to show the cart popup -->
+			<button id="open-cart">CLICK TO OPEN CART</button>
 			
 			<div id="result" class="menu">
 				<p>THIS IS WHERE FILE LIST WILL APPEAR</p>
 			</div>
-
-			<!-- Button to show the cart popup -->
-			<button id="open-cart">CLICK TO OPEN CART</button>
 
 			<div id="flex-main-container">
 				<!-- Display an initial SVG -->
@@ -606,8 +606,52 @@
 		    }
 		  });
 	  </script>
+
+	  <script>
+		  (function () {
+		    const PARENT_ORIGIN = "*"; // or set to your Odoo origin for stricter security
+		
+		    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+		
+		    function saveCart() {
+		      localStorage.setItem("cart", JSON.stringify(cart));
+		      // notify parent that cart changed
+		      if (window.parent) {
+		        window.parent.postMessage(
+		          { type: "CART_UPDATED", cart: JSON.stringify(cart) },
+		          PARENT_ORIGIN
+		        );
+		      }
+		    }
+		
+		    // Example: whenever your iframe UI changes the cart, call saveCart()
+		    // e.g., addToCart(...); changeQty(...); removeItem(...); -> saveCart();
+		
+		    window.addEventListener("message", (event) => {
+		      // optionally check: if (event.origin !== "https://YOUR-ODOO-DOMAIN") return;
+		
+		      const data = event.data || {};
+		      if (data.type === "GET_CART") {
+		        // reply with current cart
+		        event.source?.postMessage(
+		          { type: "CART_VALUE", cart: JSON.stringify(cart) },
+		          event.origin
+		        );
+		      } else if (data.type === "SET_CART") {
+		        try {
+		          cart = data.cart ? JSON.parse(data.cart) : [];
+		        } catch {
+		          cart = [];
+		        }
+		        saveCart(); // persist and broadcast
+		      }
+		    });
+		  })();
+	</script>
+
 	</body>
 </html>
+
 
 
 
