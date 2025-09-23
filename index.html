@@ -641,7 +641,7 @@
 		      try { cart = data.cart ? JSON.parse(data.cart) : []; } catch { cart = []; }
 		      saveCart();
 		    } else if (data.type == "SN_VALUE") {
-				var sn = document.getElementById("sn-input");
+				var sn = document.getElementById("sn-input").value;
 				event.source?.postMessage({type: "SN_VALUE", sn}, event.origin);
 			}
 		  });
@@ -654,6 +654,7 @@
 
 	</body>
 </html>
+
 
 
 
