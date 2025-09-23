@@ -423,7 +423,7 @@
 				if (window.parent) {
 				    window.parent.postMessage(
 				      { type: "CART_UPDATED", cart: JSON.stringify(cart) },
-				      "https://anuranz.odoo.com/" 						// USING TEST SITE FOR NOW !!!!!!!!!!!!!!!
+				      "https://anuranz.odoo.com/"
 				    );
 				  }
 			}
@@ -605,7 +605,6 @@
 	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
 (function () {
-  // CHANGE THIS to your Odoo site origin exactly (protocol + domain [+ port])
   const PARENT_ORIGIN = "https://anuranz.odoo.com/";
 
   let cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -620,9 +619,6 @@
     localStorage.setItem("cart", JSON.stringify(cart));
     send("CART_UPDATED");
   }
-
-  // Call saveCart() in your add/remove/qty code paths
-  // e.g. after modifying `cart`, call saveCart();
 
   // Optional safety net: auto-broadcast whenever someone sets 'cart' in localStorage
   const _setItem = localStorage.setItem.bind(localStorage);
@@ -654,5 +650,6 @@
 
 	</body>
 </html>
+
 
 
