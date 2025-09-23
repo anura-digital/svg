@@ -605,7 +605,7 @@
 	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
 		(function () {
-		  const PARENT_ORIGIN = "https://anuranz.odoo.com/";
+		  const PARENT_ORIGIN = "https://anuranz.odoo.com";
 		
 		  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 		
@@ -640,7 +640,7 @@
 		    } else if (data.type === "SET_CART") {
 		      try { cart = data.cart ? JSON.parse(data.cart) : []; } catch { cart = []; }
 		      saveCart();
-		    } else if (data.type == "SN_VALUE") {
+		    } else if (data.type == "GET_SN") {
 				var sn = document.getElementById("sn-input").value;
 				event.source?.postMessage({type: "SN_VALUE", sn}, event.origin);
 			}
@@ -654,6 +654,7 @@
 
 	</body>
 </html>
+
 
 
 
