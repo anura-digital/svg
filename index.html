@@ -423,7 +423,7 @@
 				if (window.parent) {
 				    window.parent.postMessage(
 				      { type: "CART_UPDATED", cart: JSON.stringify(cart) },
-				      "https://anuranz.odoo.com/"
+				      "https://sparepartstest.odoo.com/"
 				    );
 				  }
 			}
@@ -605,7 +605,7 @@
 	  <!------------------------------- Allows Odoo to get the iframes data from local storage (odoo and iframe in same page but different storages) ------------------------------->
 	  <script>
 		(function () {
-		  const PARENT_ORIGIN = "https://anuranz.odoo.com";
+		  const PARENT_ORIGIN = "https://sparepartstest.odoo.com/";
 		
 		  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 		
@@ -654,6 +654,7 @@
 
 	</body>
 </html>
+
 
 
 
